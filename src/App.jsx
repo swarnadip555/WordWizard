@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Components
 import Navbar from './components/Navbar';
@@ -53,7 +53,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <Router>
         <Navbar title="WordWizard" theme={theme} toggleTheme={toggleTheme} addColorTheme={addColorTheme} />
         <Alert alert={alert} />
 
@@ -61,7 +61,7 @@ function App() {
           <Route path="/" element={<TextForm heading="Enter Your Text to Analyse" showAlert={showAlert} theme={theme} colorTheme={colorTheme} />} />
           <Route path="/about" element={<About showAlert={showAlert} theme={theme} />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </>
   )
 }
