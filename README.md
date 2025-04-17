@@ -15,9 +15,15 @@
 
 ---
 
+## 🌎 Visit the Website
+
+[WordWizard](https://palchhinparihar.github.io/WordWizard/)
+
+--- 
+
 ## 🛠️ Getting Started
 
-### 1. Clone the repo
+### 1. Clone the Repo
 
 ```bash
 git clone https://github.com/yourusername/wordwizard.git
