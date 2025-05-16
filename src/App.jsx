@@ -6,12 +6,14 @@ import Navbar from './components/Navbar';
 import Alert from './components/Alert';
 import TextForm from './components/TextForm';
 import About from './components/About';
+import Welcome from './components/Welcome';
 
 
 function App() {
   const [theme, setTheme] = useState('light');
   const [colorTheme, setColorTheme] = useState('#ffffff');
   const [alert, setAlert] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   const showAlert = (message, type) => {
     setAlert({
@@ -51,16 +53,36 @@ function App() {
     document.body.style.backgroundColor = colorTheme;
   }, [colorTheme]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+
   return (
     <>
       <Router>
-        <Navbar title="WordWizard" theme={theme} toggleTheme={toggleTheme} addColorTheme={addColorTheme} />
-        <Alert alert={alert} />
+        {showWelcome ?
+          (
+            <div style={{ background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)" }}>
+              <Welcome />
+            </div>
+          ) :
+          (
+            <>
+              <Navbar title="WordWizard" theme={theme} toggleTheme={toggleTheme} addColorTheme={addColorTheme} />
+              <Alert alert={alert} />
 
-        <Routes>
-          <Route path="/" element={<TextForm heading="Enter Your Text to Analyse" showAlert={showAlert} theme={theme} colorTheme={colorTheme} />} />
-          <Route path="/about" element={<About showAlert={showAlert} theme={theme} />} />
-        </Routes>
+              <Routes>
+                <Route path="/" element={<TextForm heading="Enter Your Text to Analyse" showAlert={showAlert} theme={theme} colorTheme={colorTheme} />} />
+                <Route path="/about" element={<About showAlert={showAlert} theme={theme} />} />
+              </Routes>
+            </>
+          )}
+
       </Router>
     </>
   )
