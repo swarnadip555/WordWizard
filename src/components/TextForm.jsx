@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getTextOperations } from '../data/textUtils';
 
 const TextForm = (props) => {
   const [text, setText] = useState('');
@@ -7,35 +8,7 @@ const TextForm = (props) => {
     setText(e.target.value);
   }
 
-  const handleUpClick = () => {
-    setText(text.toUpperCase());
-    props.showAlert("Converted to uppercase", "success");
-  }
-
-  const handleLoClick = () => {
-    setText(text.toLowerCase());
-    props.showAlert("Converted to lowercase", "success");
-  }
-
-  const handleExtraSpaces = () => {
-    let newText = text.split(/[ ]+/);
-    setText(newText.join(" "));
-    props.showAlert("Removed the extra spaces", "success");
-  }
-
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(text);
-    props.showAlert("Copied to clipboard", "success");
-  }
-
-  const handleClearText = () => {
-    let confirmation = confirm("Are you sure? ");
-    if (confirmation) {
-      let newText = "";
-      setText(newText);
-      props.showAlert("Cleared the text", "success");
-    }
-  }
+  const textOperations = getTextOperations(text, setText, props);
 
   const buttonStyle = {
     color: props.theme === 'light' ? 'black' : "white",
@@ -52,11 +25,9 @@ const TextForm = (props) => {
           <h1 className="mb-3">{props.heading}</h1>
           <textarea className="form-control" rows="10" value={text} onChange={handleChange} style={{ color: props.theme === 'light' ? 'black' : "white", backgroundColor: props.theme === 'light' ? 'white' : "#313131", border: props.theme === 'light' ? "2px solid black" : "1px solid grey" }}></textarea>
         </div>
-        <button disabled={text.length === 0} className='btn mx-2 my-1' onClick={handleUpClick} style={buttonStyle}>Convert to uppercase</button>
-        <button disabled={text.length === 0} className='btn mx-2 my-1' onClick={handleLoClick} style={buttonStyle}>Convert to lowercase</button>
-        <button disabled={text.length === 0} className='btn mx-2 my-1' onClick={handleExtraSpaces} style={buttonStyle}>Remove extra spaces</button>
-        <button disabled={text.length === 0} className='btn mx-2 my-1' onClick={handleCopyClick} style={buttonStyle}>Copy text</button>
-        <button disabled={text.length === 0} className='btn mx-2 my-1' onClick={handleClearText} style={buttonStyle}>Clear text</button>
+        {textOperations.map((operation, index) => {
+          return <button key={index} disabled={text.length === 0} className='btn mx-2 my-1' onClick={operation.func} style={buttonStyle}>{operation.label}</button>
+        })}
       </div>
 
       <div className='info container my-4'>

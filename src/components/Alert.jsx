@@ -1,13 +1,12 @@
 import React from 'react';
 import { capitalize } from '../utils';
 
-const Alert = (props) => {
-
+const Alert = ({alert}) => {
   return (
     <div data-aos="fade-up" style={{ height: "40px" }}>
-      {props.alert && (
-        <div className={`alert alert-${props.alert.type} alert-dismissible fade show`} role="alert">
-          <span><strong>{capitalize(props.alert.type)}</strong> : {props.alert.msg}</span>
+      {alert && (
+        <div className={`alert alert-${alert.type} alert-dismissible fade show`} role="alert">
+          <span><strong>{capitalize(alert.type)}</strong> : {alert.msg}</span>
         </div>
       )}
     </div>

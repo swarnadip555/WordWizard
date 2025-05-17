@@ -31,19 +31,19 @@ function App() {
       // Switch to dark mode
       setTheme('dark');
       setColorTheme('#042743');
-      showAlert(`Dark Mode theme has been enabled!`, "success");
+      showAlert(`Dark theme enabled!`, "success");
 
     } else {
       setTheme('light');
       setColorTheme('#ffffff');
-      showAlert("Light theme has been enabled!", "success");
+      showAlert("Light theme enabled!", "success");
     }
   };
 
   const addColorTheme = (colorName, bgColor) => {
     if (theme === 'dark') {
       setColorTheme(bgColor);
-      showAlert(`${colorName} theme has been applied!`, "success");
+      showAlert(`${colorName} theme applied!`, "success");
     } else {
       showAlert("Enable Dark Mode to use color themes.", "warning");
     }

@@ -11,7 +11,7 @@ const Welcome = () => {
   }, [])
 
   return (
-    <h1 data-aos="zoom-in-up" className="fw-bold text-center text-white d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", fontSize: "70px" }}>Welcome to WordWizard!</h1>
+    <h1 data-aos="zoom-in-down" className="welcome fw-bold text-center text-white d-flex justify-content-center align-items-center" style={{  }}>Welcome to WordWizard!</h1>
   );
 };
 

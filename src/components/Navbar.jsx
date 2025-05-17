@@ -10,8 +10,23 @@ const Navbar = (props) => {
     return () => clearTimeout(timer);
   }, []);
 
+  const colors = [
+    {
+      colorName: "Green",
+      hexCode: "#063729"
+    },
+    {
+      colorName: "Brown",
+      hexCode: "#392626"
+    },
+    {
+      colorName: "Purple",
+      hexCode: "#421a42"
+    }
+  ];
+
   return (
-    <nav {...(animate ? { 'data-aos' : 'fade-up' } : {})} className={`navbar navbar-expand-lg navbar-${props.theme} bg-${props.theme}`}>
+    <nav {...(animate ? { 'data-aos': 'fade-up' } : {})} className={`navbar navbar-expand-lg navbar-${props.theme} bg-${props.theme}`}>
       <div className="container-fluid">
         <Link className="navbar-brand" to="/"><strong>{props.title}</strong></Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,16 +46,14 @@ const Navbar = (props) => {
             <label className="form-check-label " htmlFor="switchCheckDefault">Enable Dark Mode</label>
           </div>
 
-          <div className="d-flex mt-sm-3 mt-md-1">
-            <div className={`text-${props.theme === 'light' ? 'dark' : 'light'}`}>
-              <button disabled={props.theme === 'light'} onClick={(e) => props.addColorTheme(e.target.value, "#063729")} name="colorThemes" value="Dark Green" style={{ backgroundColor: "#063729", width: "30px", height: "30px", borderRadius: "5px", filter: 'brightness(240%)' }}></button>
-            </div>
-            <div className={`px-3 text-${props.theme === 'light' ? 'dark' : 'light'}`}>
-              <button disabled={props.theme === 'light'} onClick={(e) => props.addColorTheme(e.target.value, "#392626")} className="mx-1" name="colorThemes" value="Brown" style={{ backgroundColor: "#392626", width: "30px", height: "30px", borderRadius: "5px", filter: 'brightness(240%)' }}></button>
-            </div>
-            <div className={`text-${props.theme === 'light' ? 'dark' : 'light'}`}>
-              <button disabled={props.theme === 'light'} onClick={(e) => props.addColorTheme(e.target.value, "#421a42")} name="colorThemes" value="Purple" style={{ backgroundColor: "#421a42", width: "30px", height: "30px", borderRadius: "5px", filter: 'brightness(240%)' }}></button>
-            </div>
+          <div className="d-flex mt-sm-3 mt-md-1 gap-3">
+            {colors.map((color, index) => {
+              return (
+                <div key={index} className={`text-${props.theme === 'light' ? 'dark' : 'light'}`}>
+                  <button disabled={props.theme === 'light'} onClick={(e) => props.addColorTheme(e.target.value, color.hexCode)} name="colorThemes" value={color.colorName} style={{ backgroundColor: color.hexCode, width: "30px", height: "30px", borderRadius: "5px", filter: 'brightness(240%)' }}></button>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

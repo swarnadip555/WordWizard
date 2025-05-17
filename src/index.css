@@ -1,3 +1,14 @@
 .accordion-button::after {
   filter: invert(1);
 }
+
+.welcome {
+  min-height: 100vh;
+  font-size: 28px;
+}
+
+@media (min-width: 768px) {
+  .welcome {
+    font-size: 60px;
+  }
+}
