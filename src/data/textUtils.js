@@ -24,12 +24,24 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
     setDialogBoxOpen(true);
   };
 
+  const handleRemovePunctuation = () => {
+    const newText = text.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+    setText(newText);
+    props.showAlert("Punctuation removed.", "success");
+  };
+
+  const handleExportText = () => {
+   
+  };
+
   const obj = [
     { func: handleUpClick, label: "Convert to uppercase" },
     { func: handleLoClick, label: "Convert to lowercase" },
     { func: handleExtraSpaces, label: "Remove extra spaces" },
     { func: handleCopyClick, label: "Copy text" },
     { func: handleClearText, label: "Clear text" },
+    { func: handleRemovePunctuation, label: "Remove punctuation" },
+    { func: handleExportText, label: "Export text" },
   ];
 
   return obj;
