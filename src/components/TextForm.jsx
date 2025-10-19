@@ -27,6 +27,25 @@ const TextForm = (props) => {
     setText(newText);
     props.showAlert("Punctuation removed!", "success");
   }
+  // Function to get top 3 words
+  const getTopWords = (text) => {
+    const words = text
+      .toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") // remove punctuation
+      .split(/\s+/)
+      .filter(word => word.length > 0);
+
+    const freq = {};
+    words.forEach(word => {
+      freq[word] = (freq[word] || 0) + 1;
+    });
+
+    const sortedWords = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+    return sortedWords.slice(0, 3); // top 3
+  };
+
+  // Store top words in a variable to avoid redundant calls
+  const topWords = getTopWords(text);
 
   return (
     <section data-aos="fade-up" style={{ color: props.theme === 'light' ? 'black' : "white" }}>
@@ -74,6 +93,17 @@ const TextForm = (props) => {
         <h2>Summary of the Text</h2>
         <p>{text.split(/\s+/).filter((element) => element.length !== 0).length} words and {text.length} characters</p>
         <p>{(0.008 * text.split(' ').filter((element) => element.length !== 0).length).toFixed(2)} minutes to read</p>
+
+        {/* Display Top 3 Words only if available */}
+        {topWords.length > 0 && (
+          <p>
+            Top Words: {topWords.map(([word, count], index) => (
+              <span key={index}>
+                {word} ({count}){index < topWords.length - 1 ? ', ' : ''}
+              </span>
+            ))}
+          </p>
+        )}
 
         <h2 className='my-2'>Preview of the Text</h2>
         <p>{text.length > 0 ? text : "Nothing to preview!"}</p>
