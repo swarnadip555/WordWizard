@@ -18,9 +18,7 @@ const TextForm = (props) => {
     boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
   }
 
-  // -------------------------------
-  // Step 3: Function to get top 3 words
-  // -------------------------------
+  // Function to get top 3 words
   const getTopWords = (text) => {
     const words = text
       .toLowerCase()
@@ -37,9 +35,9 @@ const TextForm = (props) => {
     return sortedWords.slice(0, 3); // top 3
   };
 
-  // -------------------------------
-  // Step 4: JSX Return
-  // -------------------------------
+  // Store top words in a variable to avoid redundant calls
+  const topWords = getTopWords(text);
+
   return (
     <section data-aos="fade-up" style={{ color: props.theme === 'light' ? 'black' : "white" }}>
       <div className="container">
@@ -57,19 +55,17 @@ const TextForm = (props) => {
             }}
           ></textarea>
         </div>
-        {textOperations.map((operation, index) => {
-          return (
-            <button 
-              key={index} 
-              disabled={text.length === 0} 
-              className='btn mx-2 my-1' 
-              onClick={operation.func} 
-              style={buttonStyle}
-            >
-              {operation.label}
-            </button>
-          )
-        })}
+        {textOperations.map((operation, index) => (
+          <button 
+            key={index} 
+            disabled={text.length === 0} 
+            className='btn mx-2 my-1' 
+            onClick={operation.func} 
+            style={buttonStyle}
+          >
+            {operation.label}
+          </button>
+        ))}
       </div>
 
       <div className='info container my-4'>
@@ -77,12 +73,12 @@ const TextForm = (props) => {
         <p>{text.split(/\s+/).filter((element) => element.length !== 0).length} words and {text.length} characters</p>
         <p>{(0.008 * text.split(' ').filter((element) => element.length !== 0).length).toFixed(2)} minutes to read</p>
 
-        {/* Step 4: Display Top 3 Words */}
-        {text.length > 0 && (
+        {/* Display Top 3 Words only if available */}
+        {topWords.length > 0 && (
           <p>
-            Top Words: {getTopWords(text).map(([word, count], index) => (
+            Top Words: {topWords.map(([word, count], index) => (
               <span key={index}>
-                {word} ({count}){index < getTopWords(text).length - 1 ? ', ' : ''}
+                {word} ({count}){index < topWords.length - 1 ? ', ' : ''}
               </span>
             ))}
           </p>
