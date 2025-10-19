@@ -1,4 +1,4 @@
-export const getTextOperations = (text, setText, props) => {
+export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
   const handleUpClick = () => {
     setText(text.toUpperCase());
     props.showAlert("Converted to uppercase.", "success");
@@ -21,11 +21,25 @@ export const getTextOperations = (text, setText, props) => {
   };
 
   const handleClearText = () => {
-    const confirmation = window.confirm("Are you sure?");
-    if (confirmation) {
-      setText("");
-      props.showAlert("Cleared the text.", "success");
-    }
+    setDialogBoxOpen(true);
+  };
+
+  const handleRemovePunctuation = () => {
+    const newText = text.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+    setText(newText);
+    props.showAlert("Punctuation removed.", "success");
+  };
+
+  const handleExportText = () => {
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "exported_text.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    props.showAlert("Text exported.", "success");
   };
 
   const obj = [
@@ -33,7 +47,9 @@ export const getTextOperations = (text, setText, props) => {
     { func: handleLoClick, label: "Convert to lowercase" },
     { func: handleExtraSpaces, label: "Remove extra spaces" },
     { func: handleCopyClick, label: "Copy text" },
-    { func: handleClearText, label: "Clear text" }
+    { func: handleClearText, label: "Clear text" },
+    { func: handleRemovePunctuation, label: "Remove punctuation" },
+    { func: handleExportText, label: "Export text" },
   ];
 
   return obj;

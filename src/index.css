@@ -1,14 +1,14 @@
-.accordion-button::after {
-  filter: invert(1);
-}
+@import "tailwindcss";
 
-.welcome {
-  min-height: 100vh;
-  font-size: 28px;
-}
-
-@media (min-width: 768px) {
+@layer components {
   .welcome {
-    font-size: 60px;
+    min-height: 100vh;
+    font-size: 4.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .welcome {
+      font-size: 1.875rem;
+    }
   }
 }
