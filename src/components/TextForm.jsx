@@ -5,6 +5,9 @@ import DialogBox from "./DialogBox";
 const TextForm = (props) => {
   const [text, setText] = useState("");
   const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -14,7 +17,8 @@ const TextForm = (props) => {
     text,
     setText,
     setDialogBoxOpen,
-    props
+    props,
+    { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline }
   );
 
   const buttonStyle = {
@@ -135,6 +139,11 @@ const TextForm = (props) => {
               ? "bg-white border border-gray-200"
               : "bg-gray-700 border border-gray-600"
           }`}
+          style={{
+            fontWeight: isBold ? "bold" : "normal",
+            fontStyle: isItalic ? "italic" : "normal",
+            textDecoration: isUnderline ? "underline" : "none",
+          }}
         >
           {text.length > 0 ? text : "Nothing to preview!"}
         </p>

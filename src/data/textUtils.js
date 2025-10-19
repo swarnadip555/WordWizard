@@ -1,4 +1,6 @@
-export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
+export const getTextOperations = (text, setText, setDialogBoxOpen, props,styles) => {
+  const { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline } = styles;
+
   const handleUpClick = () => {
     setText(text.toUpperCase());
     props.showAlert("Converted to uppercase.", "success");
@@ -63,6 +65,22 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
     props.showAlert("Text exported.", "success");
   };
 
+  const handleBold = () => {
+    setIsBold(!isBold);
+    props.showAlert(isBold ? "Bold removed." : "Bold applied.", "success");
+  };
+
+  const handleItalic = () => {
+    setIsItalic(!isItalic);
+    props.showAlert(isItalic ? "Italic removed." : "Italic applied.", "success");
+  };
+
+  const handleUnderline = () => {
+    setIsUnderline(!isUnderline);
+    props.showAlert(isUnderline ? "Underline removed." : "Underline applied.", "success");
+  };
+
+
   const obj = [
     { func: handleUpClick, label: "Convert to uppercase" },
     { func: handleLoClick, label: "Convert to lowercase" },
@@ -72,6 +90,9 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
     { func: handleRemovePunctuation, label: "Remove punctuation" },
     { func: handleSmartCapitalization, label: "Smart Capitalization" },
     { func: handleExportText, label: "Export text" },
+    { func: handleBold, label: "Bold" },       
+    { func: handleItalic, label: "Italic" },   
+    { func: handleUnderline, label: "Underline" },
   ];
 
   return obj;
