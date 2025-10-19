@@ -29,7 +29,7 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
     { func: handleLoClick, label: "Convert to lowercase" },
     { func: handleExtraSpaces, label: "Remove extra spaces" },
     { func: handleCopyClick, label: "Copy text" },
-    { func: handleClearText, label: "Clear text" }
+    { func: handleClearText, label: "Clear text" },
   ];
 
   return obj;
