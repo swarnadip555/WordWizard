@@ -1,4 +1,4 @@
-export const getTextOperations = (text, setText, props) => {
+export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
   const handleUpClick = () => {
     setText(text.toUpperCase());
     props.showAlert("Converted to uppercase.", "success");
@@ -21,11 +21,7 @@ export const getTextOperations = (text, setText, props) => {
   };
 
   const handleClearText = () => {
-    const confirmation = window.confirm("Are you sure?");
-    if (confirmation) {
-      setText("");
-      props.showAlert("Cleared the text.", "success");
-    }
+    setDialogBoxOpen(true);
   };
 
   const obj = [
@@ -33,7 +29,7 @@ export const getTextOperations = (text, setText, props) => {
     { func: handleLoClick, label: "Convert to lowercase" },
     { func: handleExtraSpaces, label: "Remove extra spaces" },
     { func: handleCopyClick, label: "Copy text" },
-    { func: handleClearText, label: "Clear text" }
+    { func: handleClearText, label: "Clear text" },
   ];
 
   return obj;
