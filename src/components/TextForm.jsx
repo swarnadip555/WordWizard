@@ -12,8 +12,8 @@ const TextForm = (props) => {
 
   const buttonStyle = {
     color: props.theme === 'light' ? 'black' : "white",
-    backgroundColor: props.theme === 'light' ? "#faffa3" : `${props.colorTheme}`,
-    filter: props.theme === 'light' ? 'none' : 'brightness(240%)',
+    backgroundImage: props.theme === 'light' ? 'linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)' : `${props.colorTheme}`,
+    filter: props.theme === 'light' ? 'none' : 'brightness(140%)',
     fontWeight: props.theme === 'light' ? 400 : 300,
     boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
   }
@@ -87,7 +87,7 @@ const TextForm = (props) => {
         </div>
       </div>
 
-      <div className={`container mx-auto px-4 max-w-4xl ${props.theme === 'light' ? 'bg-gray-50' : 'bg-gray-800'} rounded-lg p-6`}>
+      <div className={`container mx-auto px-4 max-w-4xl ${props.theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-to-br from-gray-800 to-gray-900'} rounded-lg p-6`}>
         <h2 className="text-2xl font-bold mb-4">Summary of the Text</h2>
         <div className="space-y-2 mb-6">
           <p className="text-lg">
@@ -110,7 +110,7 @@ const TextForm = (props) => {
         </div>
 
         <h2 className="text-2xl font-bold mb-4">Preview of the Text</h2>
-        <p className={`text-lg p-4 rounded-lg ${props.theme === 'light' ? 'bg-white border border-gray-200' : 'bg-gray-700 border border-gray-600'}`}>
+        <p className={`text-lg p-4 rounded-lg ${props.theme === 'light' ? 'bg-gradient-to-r from-white to-gray-50 border border-gray-200' : 'bg-gradient-to-r from-gray-700 to-gray-600 border border-gray-500'}`}>
           {text.length > 0 ? text : "Nothing to preview!"}
         </p>
       </div>
