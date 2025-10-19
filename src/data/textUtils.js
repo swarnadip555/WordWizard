@@ -1,4 +1,13 @@
-export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
+import { checkGrammar } from "../utils";
+
+export const getTextOperations = (
+  text,
+  setText,
+  setDialogBoxOpen,
+  props,
+  setGrammarResults,
+  setLoadingGrammar
+) => {
   const handleUpClick = () => {
     setText(text.toUpperCase());
     props.showAlert("Converted to uppercase.", "success");
@@ -24,12 +33,36 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
     setDialogBoxOpen(true);
   };
 
+  // ✅ NEW: Grammar check button logic
+  const handleGrammarCheck = async () => {
+    if (!text.trim()) return;
+    setLoadingGrammar(true);
+    try {
+      const results = await checkGrammar(text);
+      setGrammarResults(results);
+      if (results.length === 0) {
+        props.showAlert("No grammar issues found!", "success");
+      } else {
+        props.showAlert(
+          `${results.length} grammar issues found.`,
+          "warning"
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      props.showAlert("Failed to check grammar.", "error");
+    } finally {
+      setLoadingGrammar(false);
+    }
+  };
+
   const obj = [
     { func: handleUpClick, label: "Convert to uppercase" },
     { func: handleLoClick, label: "Convert to lowercase" },
     { func: handleExtraSpaces, label: "Remove extra spaces" },
     { func: handleCopyClick, label: "Copy text" },
     { func: handleClearText, label: "Clear text" },
+    { func: handleGrammarCheck, label: "Check Grammar" },
   ];
 
   return obj;
