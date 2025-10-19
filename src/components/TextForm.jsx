@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { getTextOperations } from '../data/textUtils';
+import { checkGrammar } from '../utils';
+
 
 const TextForm = (props) => {
   const [text, setText] = useState('');
+  const [grammarResults, setGrammarResults] = useState([]);
+const [loadingGrammar, setLoadingGrammar] = useState(false);
+
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -27,6 +32,25 @@ const TextForm = (props) => {
     setText(newText);
     props.showAlert("Punctuation removed!", "success");
   }
+  
+  const handleGrammarCheck = async () => {
+  if (!text.trim()) return;
+  setLoadingGrammar(true);
+  try {
+    const results = await checkGrammar(text); // returns array of issues
+    setGrammarResults(results);
+    if(results.length === 0){
+      props.showAlert("No grammar issues found!", "success");
+    }
+  } catch (err) {
+    console.error(err);
+    props.showAlert("Failed to check grammar", "error");
+  } finally {
+    setLoadingGrammar(false);
+  }
+};
+
+
   // Function to get top 3 words
   const getTopWords = (text) => {
     const words = text
@@ -59,8 +83,32 @@ const TextForm = (props) => {
             onChange={handleChange} 
             placeholder="Enter your text here..."
           ></textarea>
-        </div>
+          {grammarResults.length > 0 && (
+  <div
+  className={`mt-4 p-4 rounded-lg`}
+  style={{
+    backgroundColor: props.theme === "light" ? "#FEF3C7" : "#1F2937", // light: yellow-50, dark: gray-800
+    color: props.theme === "light" ? "#000" : "#FFF",
+  }}
+>
+  <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
+  <ul className="list-disc list-inside">
+    {grammarResults.map((issue, index) => (
+      <li key={index}>
+        <span className="font-semibold" style={{ color: props.theme === "light" ? "#000" : "#FFF" }}>
+          {text.slice(issue.offset, issue.offset + issue.length)}
+        </span>{" "}
+        → {issue.replacements.length > 0 ? issue.replacements[0].value : "No suggestion"}{" "}
+        <span className="text-gray-500">({issue.message})</span>
+      </li>
+    ))}
+  </ul>
+</div>
 
+)}
+
+        </div>
+    
         {/* Text operation buttons */}
         <div className="flex flex-wrap gap-2 mb-8">
           {textOperations.map((operation, index) => (
@@ -84,8 +132,18 @@ const TextForm = (props) => {
           >
             Remove Punctuation
           </button>
+      <button 
+  disabled={text.length === 0 || loadingGrammar} 
+  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${text.length === 0 || loadingGrammar ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
+  onClick={handleGrammarCheck} 
+  style={buttonStyle}
+>
+  {loadingGrammar ? "Checking..." : "Check Grammar"}
+</button>
         </div>
       </div>
+
+
 
       <div className={`container mx-auto px-4 max-w-4xl ${props.theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-to-br from-gray-800 to-gray-900'} rounded-lg p-6`}>
         <h2 className="text-2xl font-bold mb-4">Summary of the Text</h2>
