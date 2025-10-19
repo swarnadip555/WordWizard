@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { getTextOperations } from '../data/textUtils';
+import DialogBox from '../components/DialogBox';
 
 const TextForm = (props) => {
   const [text, setText] = useState('');
+  const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
 
   const handleChange = (e) => {
     setText(e.target.value);
   }
 
-  const textOperations = getTextOperations(text, setText, props);
+  const textOperations = getTextOperations(text, setText, setDialogBoxOpen, props);
 
   const buttonStyle = {
     color: props.theme === 'light' ? 'black' : "white",
@@ -87,6 +89,14 @@ const TextForm = (props) => {
         <h2 className='my-2'>Preview of the Text</h2>
         <p>{text.length > 0 ? text : "Nothing to preview!"}</p>
       </div>
+      {dialogBoxOpen && (
+        <DialogBox
+          question="Are you sure you want to clear the text?"
+          setDialogBoxOpen={setDialogBoxOpen}
+          setText={setText}
+          showAlert={props.showAlert}
+        />
+      )}
     </section>
   )
 }
