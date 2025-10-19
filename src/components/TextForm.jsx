@@ -18,22 +18,62 @@ const TextForm = (props) => {
     boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
   }
 
+  // -------------------------------
+  // Remove punctuation function
+  // -------------------------------
+  const removePunctuation = () => {
+    // Regex removes all standard punctuation characters
+    const newText = text.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+    setText(newText);
+    props.showAlert("Punctuation removed!", "success");
+  }
+
   return (
     <section data-aos="fade-up" style={{ color: props.theme === 'light' ? 'black' : "white" }}>
       <div className="container">
         <div className="my-3">
           <h1 className="mb-3">{props.heading}</h1>
-          <textarea className="form-control" rows="10" value={text} onChange={handleChange} style={{ color: props.theme === 'light' ? 'black' : "white", backgroundColor: props.theme === 'light' ? 'white' : "#313131", border: props.theme === 'light' ? "2px solid black" : "1px solid grey" }}></textarea>
+          <textarea 
+            className="form-control" 
+            rows="10" 
+            value={text} 
+            onChange={handleChange} 
+            style={{ 
+              color: props.theme === 'light' ? 'black' : "white", 
+              backgroundColor: props.theme === 'light' ? 'white' : "#313131", 
+              border: props.theme === 'light' ? "2px solid black" : "1px solid grey" 
+            }}
+          ></textarea>
         </div>
-        {textOperations.map((operation, index) => {
-          return <button key={index} disabled={text.length === 0} className='btn mx-2 my-1' onClick={operation.func} style={buttonStyle}>{operation.label}</button>
-        })}
+
+        {/* Existing text operation buttons */}
+        {textOperations.map((operation, index) => (
+          <button 
+            key={index} 
+            disabled={text.length === 0} 
+            className='btn mx-2 my-1' 
+            onClick={operation.func} 
+            style={buttonStyle}
+          >
+            {operation.label}
+          </button>
+        ))}
+
+        {/* Remove Punctuation button */}
+        <button 
+          disabled={text.length === 0} 
+          className='btn mx-2 my-1' 
+          onClick={removePunctuation} 
+          style={buttonStyle}
+        >
+          Remove Punctuation
+        </button>
       </div>
 
       <div className='info container my-4'>
         <h2>Summary of the Text</h2>
-        <p>{text.split(/\s+/).filter((element) => { return element.length !== 0 }).length} words and {text.length} characters</p>
-        <p>{(0.008 * text.split(' ').filter((element) => { return element.length !== 0 }).length).toFixed(2)} mintues to read</p>
+        <p>{text.split(/\s+/).filter((element) => element.length !== 0).length} words and {text.length} characters</p>
+        <p>{(0.008 * text.split(' ').filter((element) => element.length !== 0).length).toFixed(2)} minutes to read</p>
 
         <h2 className='my-2'>Preview of the Text</h2>
         <p>{text.length > 0 ? text : "Nothing to preview!"}</p>
@@ -43,3 +83,4 @@ const TextForm = (props) => {
 }
 
 export default TextForm;
+
