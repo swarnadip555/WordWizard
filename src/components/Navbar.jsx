@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = (props) => {
   const [animate, setAnimate] = useState(true);
@@ -13,101 +13,71 @@ const Navbar = (props) => {
   const colors = [
     {
       colorName: "Green",
-      hexCode: "#063729",
+      hexCode: "#063729"
     },
     {
       colorName: "Brown",
-      hexCode: "#392626",
+      hexCode: "#392626"
     },
     {
       colorName: "Purple",
-      hexCode: "#421a42",
-    },
+      hexCode: "#421a42"
+    }
   ];
 
   return (
-    <nav
-      {...(animate ? { "data-aos": "fade-up" } : {})}
-      className={`navbar navbar-expand-lg navbar-${props.theme} bg-${props.theme}`}
-    >
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          <strong>{props.title}</strong>
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
+    <nav {...(animate ? { 'data-aos': 'fade-up' } : {})} className={`flex items-center justify-between flex-wrap p-4 ${props.theme === 'light' ? 'bg-white text-gray-800 border-b border-gray-200' : 'bg-gray-800 text-white border-b border-gray-700'}`}>
+      <div className="flex items-center flex-shrink-0 mr-6">
+        <Link className="font-bold text-xl" to="/"><strong>{props.title}</strong></Link>
+      </div>
+      
+      <div className="block lg:hidden">
+        <button className="flex items-center px-3 py-2 border rounded text-gray-500 border-gray-500 hover:text-gray-300 hover:border-gray-300">
+          <svg className="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <title>Menu</title>
+            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/>
+          </svg>
         </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link" aria-current="page" to="/">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/about">
-                About
-              </Link>
-            </li>
-          </ul>
-          <div
-            className={`mb-sm-3 mb-md-0 px-md-3 form-check form-switch text-${
-              props.theme === "light" ? "dark" : "light"
-            }`}
-          >
-            <input
-              onClick={() => props.toggleTheme()}
-              className="form-check-input"
-              type="checkbox"
-              role="switch"
-              id="switchCheckDefault"
-              value="Dark Blue"
+      </div>
+      
+      <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+        <div className="text-sm lg:flex-grow">
+          <Link className="block mt-4 lg:inline-block lg:mt-0 mr-4 hover:text-blue-400" to="/">Home</Link>
+          <Link className="block mt-4 lg:inline-block lg:mt-0 mr-4 hover:text-blue-400" to="/about">About</Link>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className={`flex items-center space-x-2 ${props.theme === 'light' ? 'text-gray-800' : 'text-white'}`}>
+            <input 
+              onClick={() => props.toggleTheme()} 
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+              type="checkbox" 
+              role="switch" 
+              id="switchCheckDefault" 
+              value="Dark Blue" 
             />
-            <label className="form-check-label " htmlFor="switchCheckDefault">
-              Enable Dark Mode
-            </label>
+            <label className="text-sm font-medium" htmlFor="switchCheckDefault">Enable Dark Mode</label>
           </div>
 
-          <div className="d-flex mt-sm-3 mt-md-1 gap-3">
+          <div className="flex space-x-2">
             {colors.map((color, index) => {
               return (
-                <div
-                  key={index}
-                  className={`text-${
-                    props.theme === "light" ? "dark" : "light"
-                  }`}
-                >
-                  <button
-                    disabled={props.theme === "light"}
-                    onClick={(e) =>
-                      props.addColorTheme(e.target.value, color.hexCode)
-                    }
-                    name="colorThemes"
-                    value={color.colorName}
-                    style={{
-                      backgroundColor: color.hexCode,
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "5px",
-                      filter: "brightness(240%)",
-                    }}
-                  ></button>
-                </div>
-              );
+                <button 
+                  key={index} 
+                  disabled={props.theme === 'light'} 
+                  onClick={(e) => props.addColorTheme(e.target.value, color.hexCode)} 
+                  name="colorThemes" 
+                  value={color.colorName} 
+                  className={`w-8 h-8 rounded border-2 ${props.theme === 'light' ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 transition-transform'}`}
+                  style={{ backgroundColor: color.hexCode, filter: 'brightness(240%)' }}
+                />
+              )
             })}
           </div>
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
 export default Navbar;

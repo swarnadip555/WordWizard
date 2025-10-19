@@ -11,7 +11,12 @@ const Welcome = () => {
   }, [])
 
   return (
-    <h1 data-aos="zoom-in-down" className="welcome fw-bold text-center text-white d-flex justify-content-center align-items-center" style={{  }}>Welcome to WordWizard!</h1>
+    <h1 
+      data-aos="zoom-in-down" 
+      className="welcome font-bold text-center text-white flex justify-center items-center"
+    >
+      Welcome to WordWizard!
+    </h1>
   );
 };
 
