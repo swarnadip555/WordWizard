@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getTextOperations } from '../data/textUtils';
+import Card from './Card';
 
 const TextForm = (props) => {
   const [text, setText] = useState('');
@@ -47,6 +48,11 @@ const TextForm = (props) => {
   // Store top words in a variable to avoid redundant calls
   const topWords = getTopWords(text);
 
+  //Basics Statistics
+  const wordCount = text.split(/\s+/).filter((element) => element.length !== 0).length;
+  const charCount = text.length;
+  const readingTime = (0.008 * wordCount).toFixed(2);
+
   return (
     <section data-aos="fade-up" style={{ color: props.theme === 'light' ? 'black' : "white" }}>
       <div className="container">
@@ -90,23 +96,27 @@ const TextForm = (props) => {
       </div>
 
       <div className='info container my-4'>
-        <h2>Summary of the Text</h2>
-        <p>{text.split(/\s+/).filter((element) => element.length !== 0).length} words and {text.length} characters</p>
-        <p>{(0.008 * text.split(' ').filter((element) => element.length !== 0).length).toFixed(2)} minutes to read</p>
+        {/* Preview Card */}
+        <Card title = "Preview of the Text" theme={props.theme}>
+        <p className='preview-text'>{text.length > 0 ? text : "Nothing to preview!"}</p>
+        </Card>
 
-        {/* Display Top 3 Words only if available */}
-        {topWords.length > 0 && (
-          <p>
-            Top Words: {topWords.map(([word, count], index) => (
-              <span key={index}>
-                {word} ({count}){index < topWords.length - 1 ? ', ' : ''}
-              </span>
-            ))}
-          </p>
-        )}
+        {/* Summary Card */}
+        <Card title = "Summary of the Text" theme={props.theme}>
+          <p><b>Words:</b> {wordCount}  <b>Characters:</b> {charCount}</p>
+          <p><b>Minutes to read:</b> {readingTime} </p>
 
-        <h2 className='my-2'>Preview of the Text</h2>
-        <p>{text.length > 0 ? text : "Nothing to preview!"}</p>
+          {/* Display Top 3 Words only if available */}
+          {topWords.length > 0 && (
+            <p>
+                <b>Top Words:</b> {topWords.map(([word, count], index) => (
+                <span key={index}>
+                  {word} ({count}){index < topWords.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </p>
+          )}
+        </Card>
       </div>
     </section>
   )

@@ -1,0 +1,54 @@
+.card {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 1rem;
+  transition: transform 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* Ensure cards don't have bottom margin in grid layout */
+.info .card {
+  margin-bottom: 0;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .info {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Optional: Equal height cards */
+.info .card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.preview-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.6;
+  padding: 1rem;
+  border-radius: 8px;
+}
