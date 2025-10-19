@@ -18,6 +18,15 @@ const TextForm = (props) => {
     boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
   }
 
+  // -------------------------------
+  // Remove punctuation function
+  // -------------------------------
+  const removePunctuation = () => {
+    // Regex removes all standard punctuation characters
+    const newText = text.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+    setText(newText);
+    props.showAlert("Punctuation removed!", "success");
+  }
   // Function to get top 3 words
   const getTopWords = (text) => {
     const words = text
@@ -55,6 +64,8 @@ const TextForm = (props) => {
             }}
           ></textarea>
         </div>
+
+        {/* Existing text operation buttons */}
         {textOperations.map((operation, index) => (
           <button 
             key={index} 
@@ -66,6 +77,16 @@ const TextForm = (props) => {
             {operation.label}
           </button>
         ))}
+
+        {/* Remove Punctuation button */}
+        <button 
+          disabled={text.length === 0} 
+          className='btn mx-2 my-1' 
+          onClick={removePunctuation} 
+          style={buttonStyle}
+        >
+          Remove Punctuation
+        </button>
       </div>
 
       <div className='info container my-4'>
@@ -92,3 +113,4 @@ const TextForm = (props) => {
 }
 
 export default TextForm;
+
