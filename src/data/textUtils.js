@@ -30,6 +30,27 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
     props.showAlert("Punctuation removed.", "success");
   };
 
+  const handleSmartCapitalization = () => {
+    let newText = text.toLowerCase(); // Start with everything lowercase
+
+    // Capitalize first letter after full stops (and beginning of text)
+    newText = newText.replace(
+      /(^|\.)\s*([a-z])/g,
+      (match, punctuation, letter) => {
+        return (
+          punctuation +
+          match.substring(punctuation.length, match.length - 1) +
+          letter.toUpperCase()
+        );
+      }
+    );
+
+    newText = newText.replace(/\bi\b/g, "I");
+
+    setText(newText);
+    props.showAlert("Smart capitalization applied.", "success");
+  };
+
   const handleExportText = () => {
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -49,6 +70,7 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props) => {
     { func: handleCopyClick, label: "Copy text" },
     { func: handleClearText, label: "Clear text" },
     { func: handleRemovePunctuation, label: "Remove punctuation" },
+    { func: handleSmartCapitalization, label: "Smart Capitalization" },
     { func: handleExportText, label: "Export text" },
   ];
 
