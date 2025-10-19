@@ -74,7 +74,7 @@ function App() {
           (
             <>
               <Navbar title="WordWizard" theme={theme} toggleTheme={toggleTheme} addColorTheme={addColorTheme} />
-              <Alert alert={alert} />
+              <Alert alert={alert} theme={theme} />
 
               <Routes>
                 <Route path="/" element={<TextForm heading="Enter Your Text to Analyse" showAlert={showAlert} theme={theme} colorTheme={colorTheme} />} />

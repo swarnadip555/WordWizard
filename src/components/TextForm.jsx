@@ -95,6 +95,7 @@ const TextForm = (props) => {
           setDialogBoxOpen={setDialogBoxOpen}
           setText={setText}
           showAlert={props.showAlert}
+          theme={props.theme}
         />
       )}
     </section>
