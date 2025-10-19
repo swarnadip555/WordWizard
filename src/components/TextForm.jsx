@@ -10,7 +10,6 @@ const TextForm = (props) => {
 
   const handleChange = (e) => setText(e.target.value);
 
-<<<<<<< HEAD
   const textOperations = getTextOperations(
    text,
   setText,
@@ -18,17 +17,6 @@ const TextForm = (props) => {
   props,            
   setGrammarResults,
   setLoadingGrammar
-=======
-  const handleChange = (e) => {
-    setText(e.target.value);
-  };
-
-  const textOperations = getTextOperations(
-    text,
-    setText,
-    setDialogBoxOpen,
-    props
->>>>>>> 5e238c9b0d263ac3a035960b08e12cd9858ce23b
   );
 
   const buttonStyle = {
@@ -45,26 +33,12 @@ const TextForm = (props) => {
   const getTopWords = (text) => {
     const words = text
       .toLowerCase()
-<<<<<<< HEAD
       .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
       .split(/\s+/)
       .filter((w) => w.length > 0);
     const freq = {};
     for (const word of words) freq[word] = (freq[word] || 0) + 1;
     return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 3);
-=======
-      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "") // remove punctuation
-      .split(/\s+/)
-      .filter((word) => word.length > 0);
-
-    const freq = {};
-    words.forEach((word) => {
-      freq[word] = (freq[word] || 0) + 1;
-    });
-
-    const sortedWords = Object.entries(freq).sort((a, b) => b[1] - a[1]);
-    return sortedWords.slice(0, 3); // top 3
->>>>>>> 5e238c9b0d263ac3a035960b08e12cd9858ce23b
   };
 
   const topWords = getTopWords(text);
@@ -77,7 +51,6 @@ const TextForm = (props) => {
       }`}
     >
       <div className="container mx-auto px-4 max-w-4xl">
-<<<<<<< HEAD
         <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
         <textarea
           className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
@@ -120,70 +93,6 @@ const TextForm = (props) => {
             key={i}
             disabled={text.length === 0 || (op.label === "Check Grammar" && loadingGrammar)}
             onClick={op.func}
-=======
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
-          <textarea
-            className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              props.theme === "light"
-                ? "bg-white border-gray-300 text-gray-900"
-                : "bg-gray-700 border-gray-500 text-white"
-            }`}
-            rows="10"
-            value={text}
-            onChange={handleChange}
-            placeholder="Enter your text here..."
-          ></textarea>
-          {grammarResults.length > 0 && (
-  <div
-  className={`mt-4 p-4 rounded-lg`}
-  style={{
-    backgroundColor: props.theme === "light" ? "#FEF3C7" : "#1F2937", // light: yellow-50, dark: gray-800
-    color: props.theme === "light" ? "#000" : "#FFF",
-  }}
->
-  <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
-  <ul className="list-disc list-inside">
-    {grammarResults.map((issue, index) => (
-      <li key={index}>
-        <span className="font-semibold" style={{ color: props.theme === "light" ? "#000" : "#FFF" }}>
-          {text.slice(issue.offset, issue.offset + issue.length)}
-        </span>{" "}
-        → {issue.replacements.length > 0 ? issue.replacements[0].value : "No suggestion"}{" "}
-        <span className="text-gray-500">({issue.message})</span>
-      </li>
-    ))}
-  </ul>
-</div>
-
-)}
-
-        </div>
-    
-        {/* Text operation buttons */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {textOperations.map((operation, index) => (
-            <button
-              key={index}
-              disabled={text.length === 0}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                text.length === 0
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:scale-105 active:scale-95"
-              }`}
-              onClick={operation.func}
-              style={buttonStyle}
-            >
-              {operation.label}
-            </button>
-          ))}
-
-          {/* Remove Punctuation button */}
-          <button 
-            disabled={text.length === 0} 
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${text.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
-            onClick={removePunctuation} 
->>>>>>> 5e238c9b0d263ac3a035960b08e12cd9858ce23b
             style={buttonStyle}
             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
               text.length === 0 ||
@@ -202,7 +111,6 @@ const TextForm = (props) => {
 
       {/* Buttons */}
 
-<<<<<<< HEAD
       <div
         className={`container mx-auto px-4 max-w-4xl rounded-lg p-6 ${
           props.theme === "light"
@@ -233,34 +141,9 @@ const TextForm = (props) => {
             {topWords
               .map(([word, count]) => `${word} (${count})`)
               .join(", ")}
-=======
-
-      <div className={`container mx-auto px-4 max-w-4xl ${props.theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-to-br from-gray-800 to-gray-900'} rounded-lg p-6`}>
-        <h2 className="text-2xl font-bold mb-4">Summary of the Text</h2>
-        <div className="space-y-2 mb-6">
-          <p className="text-lg">
-            <span className="font-semibold">
-              {
-                text.split(/\s+/).filter((element) => element.length !== 0)
-                  .length
-              }
-            </span>{" "}
-            words and <span className="font-semibold">{text.length}</span>{" "}
-            characters
-          </p>
-          <p className="text-lg">
-            <span className="font-semibold">
-              {(
-                0.008 *
-                text.split(" ").filter((element) => element.length !== 0).length
-              ).toFixed(2)}
-            </span>{" "}
-            minutes to read
->>>>>>> 5e238c9b0d263ac3a035960b08e12cd9858ce23b
           </p>
         )}
 
-<<<<<<< HEAD
         <h2 className="text-2xl font-bold mt-6 mb-2">Preview</h2>
         <p
           className={`text-lg p-4 rounded-lg border ${
@@ -274,34 +157,6 @@ const TextForm = (props) => {
       </div>
 
       {dialogBoxOpen && (
-=======
-          {/* Display Top 3 Words only if available */}
-          {topWords.length > 0 && (
-            <p className="text-lg">
-              <span className="font-semibold">Top Words:</span>{" "}
-              {topWords.map(([word, count], index) => (
-                <span key={index}>
-                  {word} ({count}){index < topWords.length - 1 ? ", " : ""}
-                </span>
-              ))}
-            </p>
-          )}
-        </div>
-
-        <h2 className="text-2xl font-bold mb-4">Preview of the Text</h2>
-        <p
-          className={`text-lg p-4 rounded-lg ${
-            props.theme === "light"
-              ? "bg-white border border-gray-200"
-              : "bg-gray-700 border border-gray-600"
-          }`}
-        >
-          {text.length > 0 ? text : "Nothing to preview!"}
-        </p>
-      </div>
-      {dialogBoxOpen && (
-        // DialogBox component to confirm text clearing
->>>>>>> 5e238c9b0d263ac3a035960b08e12cd9858ce23b
         <DialogBox
           question="Are you sure you want to clear the text?"
           setDialogBoxOpen={setDialogBoxOpen}
