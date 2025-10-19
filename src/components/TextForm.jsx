@@ -18,13 +18,12 @@ const TextForm = (props) => {
   );
 
   const buttonStyle = {
-    color: props.theme === "light" ? "black" : "white",
-    backgroundColor:
-      props.theme === "light" ? "#faffa3" : `${props.colorTheme}`,
-    filter: props.theme === "light" ? "none" : "brightness(240%)",
-    fontWeight: props.theme === "light" ? 400 : 300,
-    boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.15)",
-  };
+    color: props.theme === 'light' ? 'black' : "white",
+    backgroundImage: props.theme === 'light' ? 'linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)' : `${props.colorTheme}`,
+    filter: props.theme === 'light' ? 'none' : 'brightness(140%)',
+    fontWeight: props.theme === 'light' ? 400 : 300,
+    boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
+  }
 
   // Function to get top 3 words
   const getTopWords = (text) => {
