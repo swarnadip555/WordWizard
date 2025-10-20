@@ -30,8 +30,3 @@
     animation: fadeIn 0.2s ease-out;
   }
 }
-
-/* Smooth body background transitions */
-body {
-  transition: background 0.3s ease-in-out;
-}
