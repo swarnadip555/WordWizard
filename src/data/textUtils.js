@@ -1,17 +1,8 @@
-
 import { checkGrammar } from "../utils";
 
-export const getTextOperations = (
-  text,
-  setText,
-  setDialogBoxOpen,
-  props,
-  setGrammarResults,
-  setLoadingGrammar
-) => {
-
-
-
+export const getTextOperations = (text, setText, setDialogBoxOpen, props, setGrammarResults,
+  setLoadingGrammar,styles) => {
+  const { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline } = styles;
 
   const handleUpClick = () => {
     setText(text.toUpperCase());
@@ -38,8 +29,61 @@ export const getTextOperations = (
     setDialogBoxOpen(true);
   };
 
-  // ✅ NEW: Grammar check button logic
-  const handleGrammarCheck = async () => {
+  const handleRemovePunctuation = () => {
+    const newText = text.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+    setText(newText);
+    props.showAlert("Punctuation removed.", "success");
+  };
+
+  const handleSmartCapitalization = () => {
+    let newText = text.toLowerCase(); // Start with everything lowercase
+
+    // Capitalize first letter after full stops (and beginning of text)
+    newText = newText.replace(
+      /(^|\.)\s*([a-z])/g,
+      (match, punctuation, letter) => {
+        return (
+          punctuation +
+          match.substring(punctuation.length, match.length - 1) +
+          letter.toUpperCase()
+        );
+      }
+    );
+
+    newText = newText.replace(/\bi\b/g, "I");
+
+    setText(newText);
+    props.showAlert("Smart capitalization applied.", "success");
+  };
+
+  const handleExportText = () => {
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "exported_text.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    props.showAlert("Text exported.", "success");
+  };
+
+  const handleBold = () => {
+    setIsBold(!isBold);
+    props.showAlert(isBold ? "Bold removed." : "Bold applied.", "success");
+  };
+
+  const handleItalic = () => {
+    setIsItalic(!isItalic);
+    props.showAlert(isItalic ? "Italic removed." : "Italic applied.", "success");
+  };
+
+  const handleUnderline = () => {
+    setIsUnderline(!isUnderline);
+    props.showAlert(isUnderline ? "Underline removed." : "Underline applied.", "success");
+  };
+
+   const handleGrammarCheck = async () => {
     if (!text.trim()) return;
     setLoadingGrammar(true);
     try {
@@ -61,21 +105,6 @@ export const getTextOperations = (
     }
   };
 
-  const handleBold = () => {
-    setIsBold(!isBold);
-    props.showAlert(isBold ? "Bold removed." : "Bold applied.", "success");
-  };
-
-  const handleItalic = () => {
-    setIsItalic(!isItalic);
-    props.showAlert(isItalic ? "Italic removed." : "Italic applied.", "success");
-  };
-
-  const handleUnderline = () => {
-    setIsUnderline(!isUnderline);
-    props.showAlert(isUnderline ? "Underline removed." : "Underline applied.", "success");
-  };
-
 
   const obj = [
     { func: handleUpClick, label: "Convert to uppercase" },
@@ -84,7 +113,12 @@ export const getTextOperations = (
     { func: handleCopyClick, label: "Copy text" },
     { func: handleClearText, label: "Clear text" },
     { func: handleGrammarCheck, label: "Check Grammar" },
-
+    { func: handleRemovePunctuation, label: "Remove punctuation" },
+    { func: handleSmartCapitalization, label: "Smart Capitalization" },
+    { func: handleExportText, label: "Export text" },
+    { func: handleBold, label: "Bold" },       
+    { func: handleItalic, label: "Italic" },   
+    { func: handleUnderline, label: "Underline" },
   ];
 
   return obj;

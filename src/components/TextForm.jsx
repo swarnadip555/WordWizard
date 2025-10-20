@@ -1,50 +1,56 @@
 import React, { useState } from "react";
-import DialogBox from "./DialogBox";
 import { getTextOperations } from "../data/textUtils";
+import DialogBox from "./DialogBox";
 
 const TextForm = (props) => {
   const [text, setText] = useState("");
   const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
-  const [grammarResults, setGrammarResults] = useState([]);
-  const [loadingGrammar, setLoadingGrammar] = useState(false);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
+  const [grammarResults, setGrammarResults] = useState([]);
+  const [loadingGrammar, setLoadingGrammar] = useState(false);
 
-  const handleChange = (e) => setText(e.target.value);
+  const handleChange = (e) => {
+    setText(e.target.value);
+  };
 
   const textOperations = getTextOperations(
-   text,
-  setText,
-  setDialogBoxOpen,
-  props,            
-  setGrammarResults,
+    text,
+    setText,
+    setDialogBoxOpen,
+    props,
+    setGrammarResults,
   setLoadingGrammar,
-     { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline }
+    { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline }
   );
 
   const buttonStyle = {
-    color: props.theme === "light" ? "black" : "white",
-    backgroundImage:
-      props.theme === "light"
-        ? "linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)"
-        : props.colorTheme,
-    filter: props.theme === "light" ? "none" : "brightness(140%)",
-    fontWeight: props.theme === "light" ? 400 : 300,
-    boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.15)",
-  };
+    color: props.theme === 'light' ? 'black' : "white",
+    backgroundImage: props.theme === 'light' ? 'linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)' : `${props.colorTheme}`,
+    filter: props.theme === 'light' ? 'none' : 'brightness(140%)',
+    fontWeight: props.theme === 'light' ? 400 : 300,
+    boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
+  }
 
+  // Function to get top 3 words
   const getTopWords = (text) => {
     const words = text
       .toLowerCase()
-      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "") // remove punctuation
       .split(/\s+/)
-      .filter((w) => w.length > 0);
+      .filter((word) => word.length > 0);
+
     const freq = {};
-    for (const word of words) freq[word] = (freq[word] || 0) + 1;
-    return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    words.forEach((word) => {
+      freq[word] = (freq[word] || 0) + 1;
+    });
+
+    const sortedWords = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+    return sortedWords.slice(0, 3); // top 3
   };
 
+  // Store top words in a variable to avoid redundant calls
   const topWords = getTopWords(text);
 
   return (
@@ -55,43 +61,46 @@ const TextForm = (props) => {
       }`}
     >
       <div className="container mx-auto px-4 max-w-4xl">
-        <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
-        <textarea
-          className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            props.theme === "light"
-              ? "bg-white border-gray-300 text-gray-900"
-              : "bg-gray-700 border-gray-500 text-white"
-          }`}
-          rows="10"
-          value={text}
-          onChange={handleChange}
-          placeholder="Enter your text here..."
-          />
-          
-                {grammarResults.length > 0 && (
-                  <div
-                    className={`mt-4 p-4 rounded-lg ${
-                      props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"
-                    }`}
-                  >
-                    <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {grammarResults.map((issue, i) => (
-                        <li key={i}>
-                          <strong>
-                            {text.slice(issue.offset, issue.offset + issue.length)}
-                          </strong>{" "}
-                          →{" "}
-                          {issue.replacements.length > 0
-                            ? issue.replacements[0].value
-                            : "No suggestion"}{" "}
-                          <span className="text-gray-500">({issue.message})</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-      <div className="flex flex-wrap gap-2 my-6">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
+          <textarea
+            className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              props.theme === "light"
+                ? "bg-white border-gray-300 text-gray-900"
+                : "bg-gray-700 border-gray-500 text-white"
+            }`}
+            rows="10"
+            value={text}
+            onChange={handleChange}
+            placeholder="Enter your text here..."
+          ></textarea>
+          {grammarResults.length > 0 && (
+                   <div
+                     className={`mt-4 p-4 rounded-lg ${
+                       props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"
+                     }`}
+                   >
+                     <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
+                     <ul className="list-disc list-inside space-y-1">
+                       {grammarResults.map((issue, i) => (
+                         <li key={i}>
+                           <strong>
+                             {text.slice(issue.offset, issue.offset + issue.length)}
+                           </strong>{" "}
+                           →{" "}
+                           {issue.replacements.length > 0
+                             ? issue.replacements[0].value
+                             : "No suggestion"}{" "}
+                           <span className="text-gray-500">({issue.message})</span>
+                         </li>
+                       ))}
+                     </ul>
+                   </div>
+                 )}
+        </div>
+
+        {/* Text operation buttons */}
+        <div className="flex flex-wrap gap-2 my-6">
         {textOperations.map((op, i) => (
           <button
             key={i}
@@ -240,12 +249,13 @@ const TextForm = (props) => {
             textDecoration: isUnderline ? "underline" : "none",
           }}
         >
-          {text || "Nothing to preview!"}
+          {text.length > 0 ? text : "Nothing to preview!"}
         </p>
       </div>
 
       
       {dialogBoxOpen && (
+        // DialogBox component to confirm text clearing
         <DialogBox
           question="Are you sure you want to clear the text?"
           setDialogBoxOpen={setDialogBoxOpen}
