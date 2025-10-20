@@ -10,7 +10,7 @@ export const getTextOperations = (
   setLoadingGrammar
 ) => {
 
-  const { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline } = styles;
+
 
 
   const handleUpClick = () => {
@@ -84,12 +84,7 @@ export const getTextOperations = (
     { func: handleCopyClick, label: "Copy text" },
     { func: handleClearText, label: "Clear text" },
     { func: handleGrammarCheck, label: "Check Grammar" },
-    { func: handleRemovePunctuation, label: "Remove punctuation" },
-    { func: handleSmartCapitalization, label: "Smart Capitalization" },
-    { func: handleExportText, label: "Export text" },
-    { func: handleBold, label: "Bold" },       
-    { func: handleItalic, label: "Italic" },   
-    { func: handleUnderline, label: "Underline" },
+
   ];
 
   return obj;
