@@ -4,26 +4,53 @@ import DialogBox from "./DialogBox";
 
 const TextForm = (props) => {
   const [text, setText] = useState("");
+  const [previewText, setPreviewText] = useState("");
   const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
+  const [isStrike, setIsStrike] = useState(false);
   const [grammarResults, setGrammarResults] = useState([]);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
-  const [isStrikeThrough, setStrikeThrough] = useState(false);
+  const fileInputRef = React.useRef();
 
   const handleChange = (e) => {
     setText(e.target.value);
+    // Keep preview in sync with typing (operations will update previewText separately)
+    setPreviewText(e.target.value);
+  };
+
+  // Import handler for file input (reads file and populates the textarea & preview)
+  const handleFileImport = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const content = ev.target.result;
+      setText(content);
+      setPreviewText(content);
+      props.showAlert("File imported.", "success");
+    };
+    reader.onerror = () => {
+      props.showAlert("Failed to read file.", "error");
+    };
+    reader.readAsText(file, "utf-8");
+  };
+
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
   };
 
   const textOperations = getTextOperations(
     text,
     setText,
+    previewText,
+    setPreviewText,
     setDialogBoxOpen,
     props,
     setGrammarResults,
-  setLoadingGrammar,
-    { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrikeThrough, setStrikeThrough }
+    setLoadingGrammar,
+    { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrike, setIsStrike },
+    handleFileInputClick
   );
 
   const buttonStyle = {
@@ -53,7 +80,7 @@ const TextForm = (props) => {
 
   // Store top words in a variable to avoid redundant calls
   const topWords = getTopWords(text);
-  const textDecoration = [isUnderline ? "underline" : null, isStrikeThrough ? "line-through" : null]
+  const textDecoration = [isUnderline ? "underline" : null, isStrike ? "line-through" : null]
       .filter(Boolean)
       .join(" ") || "none";
 
@@ -79,6 +106,14 @@ const TextForm = (props) => {
             onChange={handleChange}
             placeholder="Enter your text here..."
           ></textarea>
+          {/* hidden file input for import */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".txt"
+            className="hidden"
+            onChange={(e) => handleFileImport(e.target.files && e.target.files[0])}
+          />
           {grammarResults.length > 0 && (
             <div
               className={`mt-4 p-4 rounded-lg ${
@@ -106,32 +141,23 @@ const TextForm = (props) => {
 
         {/* Text operation buttons */}
         <div className="flex flex-wrap gap-2 my-6">
-          {textOperations.map((op, i) => {
-            // Enable "Generate Lorem Ipsum" always
-            const isDisabled =
-              op.label !== "Generate Random Text" &&
-              op.label !== "Import Text File" &&
-              (text.length === 0 ||
-                (op.label === "Check Grammar" && loadingGrammar));
-
-            return (
-              <button
-                key={i}
-                disabled={isDisabled}
-                onClick={op.func}
-                style={buttonStyle}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  isDisabled
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:scale-105 active:scale-95"
-                }`}
-              >
-                {op.label === "Check Grammar" && loadingGrammar
-                  ? "Checking..."
-                  : op.label}
-              </button>
-            );
-          })}
+          {textOperations.map((op, i) => (
+            <button
+              key={i}
+              disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar)}
+              onClick={op.func}
+              style={buttonStyle}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                ((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar))
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:scale-105 active:scale-95"
+              }`}
+            >
+              {op.label === "Check Grammar" && loadingGrammar
+                ? "Checking..."
+                : op.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -269,7 +295,7 @@ const TextForm = (props) => {
             textDecoration: textDecoration,
           }}
         >
-          {text.length > 0 ? text : "Nothing to preview!"}
+          {previewText && previewText.length > 0 ? previewText : "Nothing to preview!"}
         </p>
       </div>
 

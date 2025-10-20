@@ -1,39 +1,51 @@
 import { checkGrammar } from "../utils";
 
-export const getTextOperations = (text, setText, setDialogBoxOpen, props, setGrammarResults,
-  setLoadingGrammar,styles) => {
-  const { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrikeThrough, setStrikeThrough } = styles;
+export const getTextOperations = (
+  text,
+  setText,
+  previewText,
+  setPreviewText,
+  setDialogBoxOpen,
+  props,
+  setGrammarResults,
+  setLoadingGrammar,
+  styles,
+  triggerFileInput
+) => {
+  const { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrike, setIsStrike } = styles;
 
   const handleUpClick = () => {
-    setText(text.toUpperCase());
+    setPreviewText(text.toUpperCase());
     props.showAlert("Converted to uppercase.", "success");
   };
 
   const handleLoClick = () => {
-    setText(text.toLowerCase());
+    setPreviewText(text.toLowerCase());
     props.showAlert("Converted to lowercase.", "success");
   };
 
   const handleRemoveLineBreaks = () => {
-    const newText = text.replace(/[\r\n]+/g, " "); // replace all line breaks with space
-    setText(newText);
+    const src = previewText || text;
+    const newText = src.replace(/\r?\n+/g, " ");
+    setPreviewText(newText);
     props.showAlert("Line breaks removed.", "success");
   };
 
-  const handleTrimSpaces = () => {
-    const newText = text.trim(); // removes leading and trailing spaces
-    setText(newText);
-    props.showAlert("Leading and trailing spaces removed.", "success");
+  const handleTrimEdges = () => {
+    const src = previewText || text;
+    const newText = src.trim();
+    setPreviewText(newText);
+    props.showAlert("Trimmed leading/trailing spaces.", "success");
   };
 
   const handleExtraSpaces = () => {
     const newText = text.split(/[ ]+/).join(" ");
-    setText(newText);
+    setPreviewText(newText);
     props.showAlert("Removed extra spaces.", "success");
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(previewText || text);
     props.showAlert("Copied to clipboard.", "success");
   };
 
@@ -42,15 +54,14 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props, setGra
   };
 
   const handleRemovePunctuation = () => {
-    const newText = text.replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
-    setText(newText);
+    const newText = (previewText || text).replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "");
+    setPreviewText(newText);
     props.showAlert("Punctuation removed.", "success");
   };
 
   const handleSmartCapitalization = () => {
-    let newText = text.toLowerCase(); // Start with everything lowercase
+    let newText = (previewText || text).toLowerCase();
 
-    // Capitalize first letter after full stops (and beginning of text)
     newText = newText.replace(
       /(^|\.)\s*([a-z])/g,
       (match, punctuation, letter) => {
@@ -64,12 +75,12 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props, setGra
 
     newText = newText.replace(/\bi\b/g, "I");
 
-    setText(newText);
+    setPreviewText(newText);
     props.showAlert("Smart capitalization applied.", "success");
   };
 
   const handleExportText = () => {
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([previewText || text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -81,41 +92,29 @@ export const getTextOperations = (text, setText, setDialogBoxOpen, props, setGra
   };
 
   const handleRemoveDuplicateLines = () => {
-    // Split text into lines, remove duplicates, and join back
-    const lines = text.split(/\r?\n/); // handle \n or \r\n
-    const uniqueLines = [...new Set(lines)];
-    const newText = uniqueLines.join("\n");
-    setText(newText);
+    const src = previewText || text;
+    const lines = src.split(/\r?\n/);
+    const seen = new Set();
+    const unique = [];
+    lines.forEach((l) => {
+      if (!seen.has(l)) {
+        seen.add(l);
+        unique.push(l);
+      }
+    });
+    const newText = unique.join("\n");
+    setPreviewText(newText);
     props.showAlert("Duplicate lines removed.", "success");
   };
 
-  const handleGenerateLoremIpsum = () => {
-    const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`;
-
-    setText(text+lorem);
-    props.showAlert("Random text generated.", "success");
+  const handleGenerateLorem = () => {
+    const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.`;
+    setPreviewText(lorem);
+    props.showAlert("Generated lorem ipsum.", "success");
   };
 
-  const handleImportTextFile = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".txt";
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          setText(event.target.result);
-          props.showAlert("Text file imported successfully.", "success");
-        };
-        reader.readAsText(file);
-      }
-    };
-    input.click();
+  const handleImportFile = () => {
+    if (typeof triggerFileInput === "function") triggerFileInput();
   };
 
   const handleBold = () => {
@@ -132,12 +131,13 @@ reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`;
     setIsUnderline(!isUnderline);
     props.showAlert(isUnderline ? "Underline removed." : "Underline applied.", "success");
   };
-  const handleStrikeThrough = () => {
-    setStrikeThrough(!isStrikeThrough);
-    props.showAlert(isStrikeThrough ? "Strike Through removed." : "Strike Through applied.", "success");
+
+  const handleStrike = () => {
+    setIsStrike(!isStrike);
+    props.showAlert(isStrike ? "Strikethrough removed." : "Strikethrough applied.", "success");
   };
 
-   const handleGrammarCheck = async () => {
+  const handleGrammarCheck = async () => {
     if (!text.trim()) return;
     setLoadingGrammar(true);
     try {
@@ -146,10 +146,7 @@ reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`;
       if (results.length === 0) {
         props.showAlert("No grammar issues found!", "success");
       } else {
-        props.showAlert(
-          `${results.length} grammar issues found.`,
-          "warning"
-        );
+        props.showAlert(`${results.length} grammar issues found.`, "warning");
       }
     } catch (err) {
       console.error(err);
@@ -159,26 +156,25 @@ reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`;
     }
   };
 
-
   const obj = [
     { func: handleUpClick, label: "Convert to uppercase" },
     { func: handleLoClick, label: "Convert to lowercase" },
+    { func: handleRemoveLineBreaks, label: "Remove line breaks", allowEmpty: false },
+    { func: handleTrimEdges, label: "Trim start/end spaces", allowEmpty: false },
     { func: handleExtraSpaces, label: "Remove extra spaces" },
     { func: handleCopyClick, label: "Copy text" },
     { func: handleClearText, label: "Clear text" },
     { func: handleGrammarCheck, label: "Check Grammar" },
     { func: handleRemovePunctuation, label: "Remove punctuation" },
     { func: handleSmartCapitalization, label: "Smart Capitalization" },
+    { func: handleRemoveDuplicateLines, label: "Remove duplicate lines", allowEmpty: false },
+    { func: handleGenerateLorem, label: "Generate lorem ipsum", allowEmpty: true },
+    { func: handleImportFile, label: "Import file", allowEmpty: true },
     { func: handleExportText, label: "Export text" },
-    { func: handleBold, label: "Bold" },       
-    { func: handleItalic, label: "Italic" },   
+    { func: handleBold, label: "Bold" },
+    { func: handleItalic, label: "Italic" },
     { func: handleUnderline, label: "Underline" },
-    { func: handleStrikeThrough, label: "Strike Through" },
-    { func: handleRemoveLineBreaks, label: "Remove Line Breaks" },
-    { func: handleTrimSpaces, label: "Trim Spaces" },
-    { func: handleRemoveDuplicateLines, label: "Remove Duplicate Lines" },
-    { func: handleGenerateLoremIpsum, label: "Generate Random Text" },
-    { func: handleImportTextFile, label: "Import Text File" },
+    { func: handleStrike, label: "Strikethrough", allowEmpty: true },
   ];
 
   return obj;
