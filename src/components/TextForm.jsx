@@ -202,6 +202,7 @@ const TextForm = (props) => {
           // question="Are you sure you want to clear the text?"
           setDialogBoxOpen={setDialogBoxOpen}
           setText={setText}
+          setPreviewText={setPreviewText}
           showAlert={props.showAlert}
           theme={props.theme}
         />
