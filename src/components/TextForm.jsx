@@ -162,26 +162,29 @@ const TextForm = (props) => {
       </div>
 
       <div
-        className={`container mx-auto px-6 py-8 max-w-4xl rounded-2xl shadow-lg transition-all duration-300 ${
+        className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 ${
           props.theme === "light"
             ? "bg-yellow-100 text-gray-800"
-            : "bg-gray-900 text-gray-100"
+            : "bg-gray-900 text-gray-100 shadow-xl shadow-gray-800/60"
         }`}
       >
         {/* Header */}
         <h2
-          className={`text-3xl font-bold mb-6 text-center tracking-tight ${
+          className={`text-2xl sm:text-3xl font-bold mb-8 text-center tracking-tight ${
             props.theme === "light" ? "text-gray-800" : "text-gray-100"
           }`}
         >
           Summary of the Text
         </h2>
 
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
-          {/* Words */}
+        {/* Summary Stats - Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-center place-items-center">
+        {/* Words */}
           <div
-            className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
               props.theme === "light"
                 ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
@@ -194,14 +197,17 @@ const TextForm = (props) => {
             >
               Words
             </p>
-            <p className="text-2xl font-semibold">
+            <p className="text-2xl font-bold">
               {text.split(/\s+/).filter((el) => el.length !== 0).length}
             </p>
           </div>
 
           {/* Characters */}
           <div
-            className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
               props.theme === "light"
                 ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
@@ -210,16 +216,19 @@ const TextForm = (props) => {
             <p
               className={`text-sm font-medium ${
                 props.theme === "light" ? "text-gray-600" : "text-gray-400"
-              }`}
-            >
+                }`}
+                >
               Characters
             </p>
-            <p className="text-2xl font-semibold">{text.length}</p>
+            <p className="text-2xl font-bold">{text.length}</p>
           </div>
 
           {/* Reading Time */}
           <div
-            className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
               props.theme === "light"
                 ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
@@ -228,13 +237,13 @@ const TextForm = (props) => {
             <p
               className={`text-sm font-medium ${
                 props.theme === "light" ? "text-gray-600" : "text-gray-400"
-              }`}
-            >
+                }`}
+                >
               Reading Time
             </p>
-            <p className="text-2xl font-semibold">
+            <p className="text-2xl font-bold">
               {(
-                0.008 * text.split(" ").filter((el) => el.length !== 0).length
+                0.008 * text.split(/\s+/).filter((el) => el.length !== 0).length
               ).toFixed(2)}{" "}
               min
             </p>
@@ -245,7 +254,7 @@ const TextForm = (props) => {
         {topWords.length > 0 && (
           <div className="mb-8 text-center">
             <h3
-              className={`text-xl font-semibold mb-2 ${
+              className={`text-xl font-semibold mb-4 ${
                 props.theme === "light" ? "text-gray-800" : "text-gray-100"
               }`}
             >
@@ -255,9 +264,9 @@ const TextForm = (props) => {
               {topWords.slice(0, 5).map(([word, count], index) => (
                 <span
                   key={index}
-                  className={`px-3 py-1 text-sm rounded-full border ${
+                  className={`px-3 py-1 text-sm font-medium rounded-full border transition-transform duration-200 hover:scale-110 ${
                     props.theme === "light"
-                      ? "bg-indigo-100 text-gray-800 border-gray-200"
+                      ? "bg-yellow-200 text-yellow-800 border-yellow-300"
                       : "bg-gray-700 text-gray-200 border-gray-600"
                   }`}
                 >
@@ -270,8 +279,8 @@ const TextForm = (props) => {
 
         {/* Divider */}
         <div
-          className={`border-t mb-8 ${
-            props.theme === "light" ? "border-yellow-500" : "border-gray-700"
+          className={`border-t-2 my-8 ${
+            props.theme === "light" ? "border-yellow-500/50" : "border-gray-700"
           }`}
         ></div>
 
@@ -284,7 +293,7 @@ const TextForm = (props) => {
           Preview of the Text
         </h2>
         <p
-          className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-5 transition-colors ${
+          className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-6 min-h-[100px] transition-all duration-300 hover:shadow-md ${
             props.theme === "light"
               ? "bg-yellow-50 border border-yellow-400 text-gray-800"
               : "bg-gray-800 border border-gray-700 text-gray-100"
@@ -295,7 +304,9 @@ const TextForm = (props) => {
             textDecoration: textDecoration,
           }}
         >
-          {previewText && previewText.length > 0 ? previewText : "Nothing to preview!"}
+          {previewText && previewText.length > 0
+            ? previewText
+            : "Nothing to preview!"}
         </p>
       </div>
 
