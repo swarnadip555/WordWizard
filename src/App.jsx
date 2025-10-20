@@ -9,8 +9,8 @@ import About from "./components/About";
 import Welcome from "./components/Welcome";
 
 function App() {
-  const [currentThemeId, setCurrentThemeId] = useState("dark"); // Default theme
-  const [colorTheme, setColorTheme] = useState("linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)");
+  const [currentThemeId, setCurrentThemeId] = useState(localStorage.getItem("theme") || "dark"); // Default theme
+  const [colorTheme, setColorTheme] = useState(localStorage.getItem("colorTheme") || "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)");
   const [alert, setAlert] = useState(null);
   const [showWelcome, setShowWelcome] = useState(true);
 
@@ -53,6 +53,8 @@ function App() {
   const handleThemeSelect = (themeId, gradient) => {
     setCurrentThemeId(themeId);
     setColorTheme(gradient);
+    localStorage.setItem("theme", themeId);
+    localStorage.setItem("colorTheme", gradient);
     
     const selectedTheme = allThemes.find(t => t.id === themeId);
     const themeName = themeId.charAt(0).toUpperCase() + themeId.slice(1).replace('-', ' ');
