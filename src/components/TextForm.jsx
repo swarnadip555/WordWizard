@@ -120,21 +120,60 @@ const TextForm = (props) => {
                 props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"
               }`}
             >
-              <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
-              <ul className="list-disc list-inside space-y-1">
-                {grammarResults.map((issue, i) => (
-                  <li key={i}>
-                    <strong>
-                      {text.slice(issue.offset, issue.offset + issue.length)}
-                    </strong>{" "}
-                    →{" "}
-                    {issue.replacements.length > 0
-                      ? issue.replacements[0].value
-                      : "No suggestion"}{" "}
-                    <span className="text-gray-500">({issue.message})</span>
-                  </li>
-                ))}
-              </ul>
+              {/* Header with Close Button */}
+              <div className="flex justify-between items-center mb-4">
+                <h3 className={`text-3xl font-bold tracking-tight ${
+                  props.theme === "light" ? "text-gray-800" : "text-gray-100"
+                }`}>
+                  Grammar Suggestions
+                </h3>
+                <button
+                  onClick={() => setGrammarResults([])}
+                  className={`p-2 rounded-full hover:bg-opacity-20 transition-colors ${
+                    props.theme === "light"
+                      ? "hover:bg-gray-500 text-gray-700"
+                      : "hover:bg-gray-300 text-gray-300"
+                  }`}
+                  aria-label="Close grammar suggestions"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Suggestions List */}
+              <div className={`rounded-xl border shadow-sm transition-all duration-300 p-4 ${
+                props.theme === "light"
+                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+              }`}>
+                <ul className="space-y-3">
+                  {grammarResults.map((issue, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="mt-1">•</span>
+                      <div>
+                        <strong className="font-semibold">
+                          {text.slice(issue.offset, issue.offset + issue.length)}
+                        </strong>
+                        {" → "}
+                        <span className={`font-medium ${
+                          props.theme === "light" ? "text-green-700" : "text-green-400"
+                        }`}>
+                          {issue.replacements.length > 0
+                            ? issue.replacements[0].value
+                            : "No suggestion"}
+                        </span>
+                        <p className={`text-sm mt-1 ${
+                          props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                        }`}>
+                          {issue.message}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           )}
         </div>
