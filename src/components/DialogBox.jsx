@@ -6,9 +6,11 @@ const DialogBox = ({
   setText,
   showAlert,
   theme,
+  setPreviewText
 }) => {
   const handleClear = () => {
     setText("");
+    setPreviewText("");
     setDialogBoxOpen(false);
     if (showAlert) {
       showAlert("Cleared the text.", "success");
