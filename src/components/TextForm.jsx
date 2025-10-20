@@ -7,6 +7,9 @@ const TextForm = (props) => {
   const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
   const [grammarResults, setGrammarResults] = useState([]);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
 
   const handleChange = (e) => setText(e.target.value);
 
@@ -16,7 +19,8 @@ const TextForm = (props) => {
   setDialogBoxOpen,
   props,            
   setGrammarResults,
-  setLoadingGrammar
+  setLoadingGrammar,
+     { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline }
   );
 
   const buttonStyle = {
@@ -109,53 +113,138 @@ const TextForm = (props) => {
       </div>
       </div>
 
-      {/* Buttons */}
-
-      <div
-        className={`container mx-auto px-4 max-w-4xl rounded-lg p-6 ${
+      <div className={`container mx-auto px-6 py-8 max-w-4xl rounded-2xl shadow-lg transition-all duration-300 ${
           props.theme === "light"
-            ? "bg-gradient-to-br from-gray-50 to-gray-100"
-            : "bg-gradient-to-br from-gray-800 to-gray-900"
+            ? "bg-yellow-100 text-gray-800"
+            : "bg-gray-900 text-gray-100"
         }`}
       >
-        <h2 className="text-2xl font-bold mb-4">Summary</h2>
-        <p className="text-lg">
-          <span className="font-semibold">
-            {text.split(/\s+/).filter((w) => w.length !== 0).length}
-          </span>{" "}
-          words, <span className="font-semibold">{text.length}</span>{" "}
-          characters
-        </p>
-        <p className="text-lg">
-          Reading time:{" "}
-          <span className="font-semibold">
-            {(
-              0.008 * text.split(" ").filter((w) => w.length !== 0).length
-            ).toFixed(2)}
-          </span>{" "}
-          minutes
-        </p>
+        
+        {/* Header */}
+        <h2 className={`text-3xl font-bold mb-6 text-center tracking-tight ${
+            props.theme === "light" ? "text-gray-800" : "text-gray-100"
+          }`}
+        >
+          Summary of the Text
+        </h2>
+
+        {/* Summary Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
+            {/* Words */}
+            <div
+              className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+                props.theme === "light"
+                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+              }`}
+            >
+              <p className={`text-sm font-medium ${
+                  props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+              >
+                Words
+              </p>
+              <p className="text-2xl font-semibold">
+                {text.split(/\s+/).filter((el) => el.length !== 0).length}
+              </p>
+            </div>
+
+            {/* Characters */}
+            <div className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+                props.theme === "light"
+                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+              }`}
+            >
+              <p
+                className={`text-sm font-medium ${
+                  props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+              >
+                Characters
+              </p>
+              <p className="text-2xl font-semibold">{text.length}</p>
+            </div>
+
+            {/* Reading Time */}
+            <div className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+                props.theme === "light"
+                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+              }`}
+            >
+              <p
+                className={`text-sm font-medium ${
+                  props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+              >
+                Reading Time
+              </p>
+              <p className="text-2xl font-semibold">
+                {(
+                  0.008 * text.split(" ").filter((el) => el.length !== 0).length
+                ).toFixed(2)}{" "}
+                min
+              </p>
+            </div>
+        </div>
+
+        {/* Top Words */}
         {topWords.length > 0 && (
-          <p className="text-lg mt-2">
-            <span className="font-semibold">Top Words: </span>
-            {topWords
-              .map(([word, count]) => `${word} (${count})`)
-              .join(", ")}
-          </p>
+          <div className="mb-8 text-center">
+            <h3 className={`text-xl font-semibold mb-2 ${
+                props.theme === "light" ? "text-gray-800" : "text-gray-100"
+              }`}
+            >
+              Top Words
+            </h3>
+            <div className="flex flex-wrap justify-center gap-2">
+              {topWords.slice(0, 5).map(([word, count], index) => (
+                <span
+                  key={index}
+                  className={`px-3 py-1 text-sm rounded-full border ${
+                    props.theme === "light"
+                      ? "bg-indigo-100 text-gray-800 border-gray-200"
+                      : "bg-gray-700 text-gray-200 border-gray-600"
+                  }`}
+                >
+                  {word} ({count})
+                </span>
+              ))}
+            </div>
+          </div>
         )}
 
-        <h2 className="text-2xl font-bold mt-6 mb-2">Preview</h2>
-        <p
-          className={`text-lg p-4 rounded-lg border ${
-            props.theme === "light"
-              ? "bg-white border-gray-200"
-              : "bg-gray-700 border-gray-600"
+        {/* Divider */}
+        <div
+          className={`border-t mb-8 ${
+            props.theme === "light" ? "border-yellow-500" : "border-gray-700"
           }`}
+        ></div>
+
+        {/* Preview Section */}
+        <h2 className={`text-2xl font-bold mb-4 ${
+            props.theme === "light" ? "text-gray-800" : "text-gray-100"
+          }`}
+        >
+          Preview of the Text
+        </h2>
+        <p className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-5 transition-colors ${
+            props.theme === "light"
+              ? "bg-yellow-50 border border-yellow-400 text-gray-800"
+              : "bg-gray-800 border border-gray-700 text-gray-100"
+          }`}
+          style={{
+            fontWeight: isBold ? "bold" : "normal",
+            fontStyle: isItalic ? "italic" : "normal",
+            textDecoration: isUnderline ? "underline" : "none",
+          }}
         >
           {text || "Nothing to preview!"}
         </p>
       </div>
 
+      
       {dialogBoxOpen && (
         <DialogBox
           question="Are you sure you want to clear the text?"
