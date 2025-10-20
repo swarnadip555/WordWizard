@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { getTextOperations } from "../data/textUtils";
 import DialogBox from "./DialogBox";
+import Toolbar from "./Toolbar";
+
 
 const TextForm = (props) => {
   const [text, setText] = useState("");
@@ -95,10 +97,26 @@ const TextForm = (props) => {
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
+
+           {/* Toolbar with Lucide Icons */}
+          <Toolbar
+            textOperations={textOperations}
+            theme={props.theme}
+            colorTheme={props.colorTheme}
+            loadingGrammar={loadingGrammar}
+            text={text}
+            activeStyles={{
+              Bold: isBold,
+              Italic: isItalic,
+              Underline: isUnderline,
+              Strikethrough: isStrike,
+            }}
+          />
+          
           <textarea
             className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               props.theme === "light"
-                ? "bg-white border-gray-300 text-gray-900"
+                ? "bg-white border-yellow-300 text-gray-900"
                 : "bg-gray-700 border-gray-500 text-white"
             }`}
             rows="10"
@@ -178,26 +196,6 @@ const TextForm = (props) => {
           )}
         </div>
 
-        {/* Text operation buttons */}
-        <div className="flex flex-wrap gap-2 my-6">
-          {textOperations.map((op, i) => (
-            <button
-              key={i}
-              disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar)}
-              onClick={op.func}
-              style={buttonStyle}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                ((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar))
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:scale-105 active:scale-95"
-              }`}
-            >
-              {op.label === "Check Grammar" && loadingGrammar
-                ? "Checking..."
-                : op.label}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div
