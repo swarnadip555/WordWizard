@@ -205,8 +205,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- GitHub: [@adamstosho](https://github.com/adamstosho)
-- Project Link: [https://github.com/adamstosho/WordWizard](https://github.com/adamstosho/WordWizard)
+- GitHub: [@palchhinparihar](https://github.com/palchhinparihar)
+- Project Link: [https://github.com/palchhinparihar/WordWizard](https://github.com/palchhinparihar/WordWizard)
 
 ---
 
