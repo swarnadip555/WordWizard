@@ -10,6 +10,7 @@ const TextForm = (props) => {
   const [isUnderline, setIsUnderline] = useState(false);
   const [grammarResults, setGrammarResults] = useState([]);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
+  const [isStrikeThrough, setStrikeThrough] = useState(false);
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -22,7 +23,7 @@ const TextForm = (props) => {
     props,
     setGrammarResults,
   setLoadingGrammar,
-    { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline }
+    { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrikeThrough, setStrikeThrough }
   );
 
   const buttonStyle = {
@@ -52,7 +53,11 @@ const TextForm = (props) => {
 
   // Store top words in a variable to avoid redundant calls
   const topWords = getTopWords(text);
+  const textDecoration = [isUnderline ? "underline" : null, isStrikeThrough ? "line-through" : null]
+      .filter(Boolean)
+      .join(" ") || "none";
 
+  
   return (
     <section
       data-aos="fade-up"
@@ -75,62 +80,71 @@ const TextForm = (props) => {
             placeholder="Enter your text here..."
           ></textarea>
           {grammarResults.length > 0 && (
-                   <div
-                     className={`mt-4 p-4 rounded-lg ${
-                       props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"
-                     }`}
-                   >
-                     <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
-                     <ul className="list-disc list-inside space-y-1">
-                       {grammarResults.map((issue, i) => (
-                         <li key={i}>
-                           <strong>
-                             {text.slice(issue.offset, issue.offset + issue.length)}
-                           </strong>{" "}
-                           →{" "}
-                           {issue.replacements.length > 0
-                             ? issue.replacements[0].value
-                             : "No suggestion"}{" "}
-                           <span className="text-gray-500">({issue.message})</span>
-                         </li>
-                       ))}
-                     </ul>
-                   </div>
-                 )}
+            <div
+              className={`mt-4 p-4 rounded-lg ${
+                props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"
+              }`}
+            >
+              <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
+              <ul className="list-disc list-inside space-y-1">
+                {grammarResults.map((issue, i) => (
+                  <li key={i}>
+                    <strong>
+                      {text.slice(issue.offset, issue.offset + issue.length)}
+                    </strong>{" "}
+                    →{" "}
+                    {issue.replacements.length > 0
+                      ? issue.replacements[0].value
+                      : "No suggestion"}{" "}
+                    <span className="text-gray-500">({issue.message})</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Text operation buttons */}
         <div className="flex flex-wrap gap-2 my-6">
-        {textOperations.map((op, i) => (
-          <button
-            key={i}
-            disabled={text.length === 0 || (op.label === "Check Grammar" && loadingGrammar)}
-            onClick={op.func}
-            style={buttonStyle}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-              text.length === 0 ||
-              (op.label === "Check Grammar" && loadingGrammar)
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:scale-105 active:scale-95"
-            }`}
-          >
-            {op.label === "Check Grammar" && loadingGrammar
-              ? "Checking..."
-              : op.label}
-          </button>
-        ))}
-      </div>
+          {textOperations.map((op, i) => {
+            // Enable "Generate Lorem Ipsum" always
+            const isDisabled =
+              op.label !== "Generate Random Text" &&
+              op.label !== "Import Text File" &&
+              (text.length === 0 ||
+                (op.label === "Check Grammar" && loadingGrammar));
+
+            return (
+              <button
+                key={i}
+                disabled={isDisabled}
+                onClick={op.func}
+                style={buttonStyle}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  isDisabled
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105 active:scale-95"
+                }`}
+              >
+                {op.label === "Check Grammar" && loadingGrammar
+                  ? "Checking..."
+                  : op.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className={`container mx-auto px-6 py-8 max-w-4xl rounded-2xl shadow-lg transition-all duration-300 ${
+      <div
+        className={`container mx-auto px-6 py-8 max-w-4xl rounded-2xl shadow-lg transition-all duration-300 ${
           props.theme === "light"
             ? "bg-yellow-100 text-gray-800"
             : "bg-gray-900 text-gray-100"
         }`}
       >
-        
         {/* Header */}
-        <h2 className={`text-3xl font-bold mb-6 text-center tracking-tight ${
+        <h2
+          className={`text-3xl font-bold mb-6 text-center tracking-tight ${
             props.theme === "light" ? "text-gray-800" : "text-gray-100"
           }`}
         >
@@ -139,69 +153,73 @@ const TextForm = (props) => {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
-            {/* Words */}
-            <div
-              className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
-                props.theme === "light"
-                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
-                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+          {/* Words */}
+          <div
+            className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
               }`}
             >
-              <p className={`text-sm font-medium ${
-                  props.theme === "light" ? "text-gray-600" : "text-gray-400"
-                }`}
-              >
-                Words
-              </p>
-              <p className="text-2xl font-semibold">
-                {text.split(/\s+/).filter((el) => el.length !== 0).length}
-              </p>
-            </div>
+              Words
+            </p>
+            <p className="text-2xl font-semibold">
+              {text.split(/\s+/).filter((el) => el.length !== 0).length}
+            </p>
+          </div>
 
-            {/* Characters */}
-            <div className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
-                props.theme === "light"
-                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
-                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+          {/* Characters */}
+          <div
+            className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
               }`}
             >
-              <p
-                className={`text-sm font-medium ${
-                  props.theme === "light" ? "text-gray-600" : "text-gray-400"
-                }`}
-              >
-                Characters
-              </p>
-              <p className="text-2xl font-semibold">{text.length}</p>
-            </div>
+              Characters
+            </p>
+            <p className="text-2xl font-semibold">{text.length}</p>
+          </div>
 
-            {/* Reading Time */}
-            <div className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
-                props.theme === "light"
-                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
-                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+          {/* Reading Time */}
+          <div
+            className={`p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
               }`}
             >
-              <p
-                className={`text-sm font-medium ${
-                  props.theme === "light" ? "text-gray-600" : "text-gray-400"
-                }`}
-              >
-                Reading Time
-              </p>
-              <p className="text-2xl font-semibold">
-                {(
-                  0.008 * text.split(" ").filter((el) => el.length !== 0).length
-                ).toFixed(2)}{" "}
-                min
-              </p>
-            </div>
+              Reading Time
+            </p>
+            <p className="text-2xl font-semibold">
+              {(
+                0.008 * text.split(" ").filter((el) => el.length !== 0).length
+              ).toFixed(2)}{" "}
+              min
+            </p>
+          </div>
         </div>
 
         {/* Top Words */}
         {topWords.length > 0 && (
           <div className="mb-8 text-center">
-            <h3 className={`text-xl font-semibold mb-2 ${
+            <h3
+              className={`text-xl font-semibold mb-2 ${
                 props.theme === "light" ? "text-gray-800" : "text-gray-100"
               }`}
             >
@@ -232,13 +250,15 @@ const TextForm = (props) => {
         ></div>
 
         {/* Preview Section */}
-        <h2 className={`text-2xl font-bold mb-4 ${
+        <h2
+          className={`text-2xl font-bold mb-4 ${
             props.theme === "light" ? "text-gray-800" : "text-gray-100"
           }`}
         >
           Preview of the Text
         </h2>
-        <p className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-5 transition-colors ${
+        <p
+          className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-5 transition-colors ${
             props.theme === "light"
               ? "bg-yellow-50 border border-yellow-400 text-gray-800"
               : "bg-gray-800 border border-gray-700 text-gray-100"
@@ -246,14 +266,13 @@ const TextForm = (props) => {
           style={{
             fontWeight: isBold ? "bold" : "normal",
             fontStyle: isItalic ? "italic" : "normal",
-            textDecoration: isUnderline ? "underline" : "none",
+            textDecoration: textDecoration,
           }}
         >
           {text.length > 0 ? text : "Nothing to preview!"}
         </p>
       </div>
 
-      
       {dialogBoxOpen && (
         // DialogBox component to confirm text clearing
         <DialogBox
