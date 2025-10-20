@@ -8,6 +8,8 @@ const TextForm = (props) => {
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
+  const [grammarResults, setGrammarResults] = useState([]);
+  const [loadingGrammar, setLoadingGrammar] = useState(false);
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -18,6 +20,8 @@ const TextForm = (props) => {
     setText,
     setDialogBoxOpen,
     props,
+    setGrammarResults,
+  setLoadingGrammar,
     { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline }
   );
 
@@ -70,26 +74,52 @@ const TextForm = (props) => {
             onChange={handleChange}
             placeholder="Enter your text here..."
           ></textarea>
+          {grammarResults.length > 0 && (
+                   <div
+                     className={`mt-4 p-4 rounded-lg ${
+                       props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"
+                     }`}
+                   >
+                     <h3 className="font-semibold mb-2">Grammar Suggestions:</h3>
+                     <ul className="list-disc list-inside space-y-1">
+                       {grammarResults.map((issue, i) => (
+                         <li key={i}>
+                           <strong>
+                             {text.slice(issue.offset, issue.offset + issue.length)}
+                           </strong>{" "}
+                           →{" "}
+                           {issue.replacements.length > 0
+                             ? issue.replacements[0].value
+                             : "No suggestion"}{" "}
+                           <span className="text-gray-500">({issue.message})</span>
+                         </li>
+                       ))}
+                     </ul>
+                   </div>
+                 )}
         </div>
 
         {/* Text operation buttons */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {textOperations.map((operation, index) => (
-            <button
-              key={index}
-              disabled={text.length === 0}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                text.length === 0
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:scale-105 active:scale-95"
-              }`}
-              onClick={operation.func}
-              style={buttonStyle}
-            >
-              {operation.label}
-            </button>
-          ))}
-        </div>
+        <div className="flex flex-wrap gap-2 my-6">
+        {textOperations.map((op, i) => (
+          <button
+            key={i}
+            disabled={text.length === 0 || (op.label === "Check Grammar" && loadingGrammar)}
+            onClick={op.func}
+            style={buttonStyle}
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+              text.length === 0 ||
+              (op.label === "Check Grammar" && loadingGrammar)
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:scale-105 active:scale-95"
+            }`}
+          >
+            {op.label === "Check Grammar" && loadingGrammar
+              ? "Checking..."
+              : op.label}
+          </button>
+        ))}
+      </div>
       </div>
 
       <div className={`container mx-auto px-6 py-8 max-w-4xl rounded-2xl shadow-lg transition-all duration-300 ${
