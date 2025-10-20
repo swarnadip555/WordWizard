@@ -43,6 +43,24 @@ function App() {
     }, 1500);
   };
 
+  const toggleTheme = () => {
+    if (theme === "light") {
+      // Switch to dark mode
+      setTheme("dark");
+      setColorTheme("linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)");
+    } else {
+      setTheme("light");
+      setColorTheme("linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%)");
+    }
+  };
+
+  const addColorTheme = (colorName, bgColor) => {
+    if (theme === "dark") {
+      setColorTheme(bgColor);
+      showAlert(`${colorName} theme applied!`, "success");
+    } else {
+      showAlert("Enable Dark Mode to use color themes.", "warning");
+    }
   const handleThemeSelect = (themeId, gradient) => {
     setCurrentThemeId(themeId);
     setColorTheme(gradient);
