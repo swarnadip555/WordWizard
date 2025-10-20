@@ -164,7 +164,7 @@ const TextForm = (props) => {
       <div
         className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 ${
           props.theme === "light"
-            ? "bg-yellow-100 text-gray-800"
+            ? "bg-gradient-to-br from-yellow-100 via-75% via-yellow-400/90 to-yellow-200 border border-yellow-400"
             : "bg-gray-900 text-gray-100 shadow-xl shadow-gray-800/60"
         }`}
       >
