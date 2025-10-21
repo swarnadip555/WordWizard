@@ -10,8 +10,8 @@ import Welcome from "./components/Welcome";
 import Footer from "./components/Footer"; // ADD THIS
 
 function App() {
-  const [currentThemeId, setCurrentThemeId] = useState("dark");
-  const [colorTheme, setColorTheme] = useState("linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)");
+  const [currentThemeId, setCurrentThemeId] = useState(localStorage.getItem("theme") || "dark");
+  const [colorTheme, setColorTheme] = useState(localStorage.getItem("colorTheme") || "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)");
   const [alert, setAlert] = useState(null);
   const [showWelcome, setShowWelcome] = useState(true);
 
@@ -64,15 +64,12 @@ function App() {
   const handleThemeSelect = (themeId, gradient) => {
     setCurrentThemeId(themeId);
     setColorTheme(gradient);
+    localStorage.setItem("theme", themeId);
+    localStorage.setItem("colorTheme", gradient);
     
     const themeName = themeId.charAt(0).toUpperCase() + themeId.slice(1).replace('-', ' ');
     showAlert(`${themeName} theme applied!`, "success");
   };
-
-  useEffect(() => {
-    document.body.style.background = colorTheme;
-    document.body.style.transition = 'background 0.5s ease-in-out';
-  }, [colorTheme]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -87,14 +84,21 @@ function App() {
         {showWelcome ? (
           <div
             style={{
-              background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
+              background: colorTheme,
             }}
           >
             <Welcome />
           </div>
         ) : (
           // WRAP EVERYTHING IN A FLEX CONTAINER
-          <div className="min-h-screen flex flex-col">
+          <div 
+            key={currentThemeId}
+            className="min-h-screen flex flex-col"
+            style={{
+              background: colorTheme,
+              transition: 'background 0.15s ease-in-out'
+            }}
+          >
             <Navbar
               title="WordWizard"
               theme={theme}
