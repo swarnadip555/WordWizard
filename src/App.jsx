@@ -64,6 +64,8 @@ function App() {
   const handleThemeSelect = (themeId, gradient) => {
     setCurrentThemeId(themeId);
     setColorTheme(gradient);
+    localStorage.setItem("theme", themeId);
+    localStorage.setItem("colorTheme", gradient);
     
     const themeName = themeId.charAt(0).toUpperCase() + themeId.slice(1).replace('-', ' ');
     showAlert(`${themeName} theme applied!`, "success");
