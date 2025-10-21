@@ -165,54 +165,152 @@ const TextForm = (props) => {
 
       {/* Animate the entire summary card with a zoom effect */}
       <div
-        className={`container mx-auto px-6 py-8 max-w-4xl rounded-2xl shadow-lg transition-all duration-300 ${props.theme === "light" ? "bg-yellow-100 text-gray-800" : "bg-gray-900 text-gray-100"
-          }`}
-        data-aos="zoom-in-up"
-        data-aos-delay="400"
-        data-aos-duration="800"
+        className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 ${
+          props.theme === "light"
+            ? "bg-gradient-to-br from-yellow-100 via-75% via-yellow-400/90 to-yellow-200 border border-yellow-400"
+            : "bg-gray-900 text-gray-100 shadow-xl shadow-gray-800/60"
+        }`}
       >
         {/* Animate the summary header separately */}
         <h2
-          className={`text-3xl font-bold mb-6 text-center tracking-tight ${props.theme === "light" ? "text-gray-800" : "text-gray-100"
-            }`}
-          data-aos="fade-right"
-          data-aos-delay="500"
+          className={`text-2xl sm:text-3xl font-bold mb-8 text-center tracking-tight ${
+            props.theme === "light" ? "text-gray-800" : "text-gray-100"
+          }`}
         >
           Summary of the Text
         </h2>
 
-        {/* Animate the three stat boxes with a staggered delay */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
-          <div className={`p-4 rounded-xl border shadow-sm ...`} data-aos="fade-up" data-aos-delay="600">
-            <p className={`text-sm font-medium ...`}>Words</p>
-            <p className="text-2xl font-semibold">{text.split(/\s+/).filter((el) => el.length !== 0).length}</p>
+        {/* Summary Stats - Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-center place-items-center">
+        {/* Words */}
+          <div
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
+              }`}
+            >
+              Words
+            </p>
+            <p className="text-2xl font-bold">
+              {text.split(/\s+/).filter((el) => el.length !== 0).length}
+            </p>
           </div>
-          <div className={`p-4 rounded-xl border shadow-sm ...`} data-aos="fade-up" data-aos-delay="700">
-            <p className={`text-sm font-medium ...`}>Characters</p>
-            <p className="text-2xl font-semibold">{text.length}</p>
+
+          {/* Characters */}
+          <div
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+                >
+              Characters
+            </p>
+            <p className="text-2xl font-bold">{text.length}</p>
           </div>
-          <div className={`p-4 rounded-xl border shadow-sm ...`} data-aos="fade-up" data-aos-delay="800">
-            <p className={`text-sm font-medium ...`}>Reading Time</p>
-            <p className="text-2xl font-semibold">{(0.008 * text.split(" ").filter((el) => el.length !== 0).length).toFixed(2)}{" "}min</p>
+
+          {/* Reading Time */}
+          <div
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+                >
+              Reading Time
+            </p>
+            <p className="text-2xl font-bold">
+              {(
+                0.008 * text.split(/\s+/).filter((el) => el.length !== 0).length
+              ).toFixed(2)}{" "}
+              min
+            </p>
           </div>
         </div>
 
         {/* Animate the Top Words section */}
         {topWords.length > 0 && (
-          <div className="mb-8 text-center" data-aos="fade-up" data-aos-delay="900">
-            {/* ... top words content ... */}
+          <div className="mb-8 text-center">
+            <h3
+              className={`text-xl font-semibold mb-4 ${
+                props.theme === "light" ? "text-gray-800" : "text-gray-100"
+              }`}
+            >
+              Top Words
+            </h3>
+            <div className="flex flex-wrap justify-center gap-2">
+              {topWords.slice(0, 5).map(([word, count], index) => (
+                <span
+                  key={index}
+                  className={`px-3 py-1 text-sm font-medium rounded-full border transition-transform duration-200 hover:scale-110 ${
+                    props.theme === "light"
+                      ? "bg-yellow-200 text-yellow-800 border-yellow-300"
+                      : "bg-gray-700 text-gray-200 border-gray-600"
+                  }`}
+                >
+                  {word} ({count})
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
-        <div className={`border-t mb-8 ${props.theme === "light" ? "border-yellow-500" : "border-gray-700"}`}></div>
+        {/* Divider */}
+        <div
+          className={`border-t-2 my-8 ${
+            props.theme === "light" ? "border-yellow-500/50" : "border-gray-700"
+          }`}
+        ></div>
 
-        {/* Animate the Preview section last */}
-        <div data-aos="fade-up" data-aos-delay="1000">
-          <h2 className={`text-2xl font-bold mb-4 ...`}>Preview of the Text</h2>
-          <p className={`text-lg leading-relaxed ...`} >
-            {previewText && previewText.length > 0 ? previewText : "Nothing to preview!"}
-          </p>
-        </div>
+        {/* Preview Section */}
+        <h2
+          className={`text-2xl font-bold mb-4 ${
+            props.theme === "light" ? "text-gray-800" : "text-gray-100"
+          }`}
+        >
+          Preview of the Text
+        </h2>
+        <p
+          className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-6 min-h-[100px] transition-all duration-300 hover:shadow-md ${
+            props.theme === "light"
+              ? "bg-yellow-50 border border-yellow-400 text-gray-800"
+              : "bg-gray-800 border border-gray-700 text-gray-100"
+          }`}
+          style={{
+            fontWeight: isBold ? "bold" : "normal",
+            fontStyle: isItalic ? "italic" : "normal",
+            textDecoration: textDecoration,
+          }}
+        >
+          {previewText && previewText.length > 0
+            ? previewText
+            : "Nothing to preview!"}
+        </p>
       </div>
 
       {dialogBoxOpen && (
