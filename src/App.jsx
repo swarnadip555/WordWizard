@@ -70,11 +70,6 @@ function App() {
   };
 
   useEffect(() => {
-    document.body.style.background = colorTheme;
-    document.body.style.transition = 'background 0.5s ease-in-out';
-  }, [colorTheme]);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       setShowWelcome(false);
     }, 2500);
@@ -94,7 +89,14 @@ function App() {
           </div>
         ) : (
           // WRAP EVERYTHING IN A FLEX CONTAINER
-          <div className="min-h-screen flex flex-col">
+          <div 
+            key={currentThemeId}
+            className="min-h-screen flex flex-col"
+            style={{
+              background: colorTheme,
+              transition: 'background 0.15s ease-in-out'
+            }}
+          >
             <Navbar
               title="WordWizard"
               theme={theme}
