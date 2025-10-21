@@ -10,8 +10,8 @@ import Welcome from "./components/Welcome";
 import Footer from "./components/Footer"; // ADD THIS
 
 function App() {
-  const [currentThemeId, setCurrentThemeId] = useState("dark");
-  const [colorTheme, setColorTheme] = useState("linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)");
+  const [currentThemeId, setCurrentThemeId] = useState(localStorage.getItem("theme") || "dark");
+  const [colorTheme, setColorTheme] = useState(localStorage.getItem("colorTheme") || "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)");
   const [alert, setAlert] = useState(null);
   const [showWelcome, setShowWelcome] = useState(true);
 
@@ -84,7 +84,7 @@ function App() {
         {showWelcome ? (
           <div
             style={{
-              background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
+              background: colorTheme,
             }}
           >
             <Welcome />
