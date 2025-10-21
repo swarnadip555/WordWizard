@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getTextOperations } from "../data/textUtils";
 import DialogBox from "./DialogBox";
+import Toolbar from "./Toolbar";
+
 import { motion } from "framer-motion";
 import Aos from "aos";
 
@@ -101,6 +103,22 @@ const TextForm = (props) => {
         {/* Animate the top section (header and textarea) to fade down */}
         <div className="mb-6" data-aos="fade-down" data-aos-duration="800">
           <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
+
+           {/* Toolbar with Lucide Icons */}
+          <Toolbar
+            textOperations={textOperations}
+            theme={props.theme}
+            colorTheme={props.colorTheme}
+            loadingGrammar={loadingGrammar}
+            text={text}
+            activeStyles={{
+              Bold: isBold,
+              Italic: isItalic,
+              Underline: isUnderline,
+              Strikethrough: isStrike,
+            }}
+          />
+          
           <textarea
             className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${props.theme === "light"
                 ? "bg-white border-gray-300 text-gray-900"
