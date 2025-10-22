@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getTextOperations } from "../data/textUtils";
 import DialogBox from "./DialogBox";
 import Toolbar from "./Toolbar";
-
-import { motion } from "framer-motion";
 import Aos from "aos";
+import { useTranslation } from "react-i18next";
 
 const TextForm = (props) => {
   const [text, setText] = useState("");
@@ -19,17 +18,17 @@ const TextForm = (props) => {
   const [loremParagraphs, setLoremParagraphs] = useState(1);
   const fileInputRef = React.useRef();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     Aos.refresh();
-  }, [props.theme])
+  }, [props.theme]);
 
   const handleChange = (e) => {
     setText(e.target.value);
-    // Keep preview in sync with typing (operations will update previewText separately)
     setPreviewText(e.target.value);
   };
 
-  // Import handler for file input (reads file and populates the textarea & preview)
   const handleFileImport = (file) => {
     if (!file) return;
     const reader = new FileReader();
@@ -37,10 +36,10 @@ const TextForm = (props) => {
       const content = ev.target.result;
       setText(content);
       setPreviewText(content);
-      props.showAlert("File imported.", "success");
+      props.showAlert(t("alerts.fileImported"), "success");
     };
     reader.onerror = () => {
-      props.showAlert("Failed to read file.", "error");
+      props.showAlert(t("alerts.fileError"), "error");
     };
     reader.readAsText(file, "utf-8");
   };
@@ -78,18 +77,20 @@ const TextForm = (props) => {
 
 
   const buttonStyle = {
-    color: props.theme === 'light' ? 'black' : "white",
-    backgroundImage: props.theme === 'light' ? 'linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)' : `${props.colorTheme}`,
-    filter: props.theme === 'light' ? 'none' : 'brightness(140%)',
-    fontWeight: props.theme === 'light' ? 400 : 300,
-    boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
-  }
+    color: props.theme === "light" ? "black" : "white",
+    backgroundImage:
+      props.theme === "light"
+        ? "linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)"
+        : `${props.colorTheme}`,
+    filter: props.theme === "light" ? "none" : "brightness(140%)",
+    fontWeight: props.theme === "light" ? 400 : 300,
+    boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.15)",
+  };
 
-  // Function to get top 3 words
   const getTopWords = (text) => {
     const words = text
       .toLowerCase()
-      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "") // remove punctuation
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
       .split(/\s+/)
       .filter((word) => word.length > 0);
 
@@ -99,29 +100,22 @@ const TextForm = (props) => {
     });
 
     const sortedWords = Object.entries(freq).sort((a, b) => b[1] - a[1]);
-    return sortedWords.slice(0, 3); // top 3
+    return sortedWords.slice(0, 3);
   };
   
 
-  // Store top words in a variable to avoid redundant calls
   const topWords = getTopWords(text);
-  const textDecoration = [isUnderline ? "underline" : null, isStrike ? "line-through" : null]
-    .filter(Boolean)
-    .join(" ") || "none";
-
 
   return (
     <section
-      // We remove the main animation from the section to apply it to the children
-      className={`min-h-screen py-8 ${props.theme === "light" ? "text-gray-900" : "text-white"
-        }`}
+      className={`min-h-screen py-8 ${
+        props.theme === "light" ? "text-gray-900" : "text-white"
+      }`}
     >
       <div className="container mx-auto px-4 max-w-4xl">
-        {/* Animate the top section (header and textarea) to fade down */}
         <div className="mb-6" data-aos="fade-down" data-aos-duration="800">
-          <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
+          <h1 className="text-3xl font-bold mb-6">{t("textForm.title")}</h1>
 
-           {/* Toolbar with Lucide Icons */}
           <Toolbar
             textOperations={textOperations}
             theme={props.theme}
@@ -135,34 +129,39 @@ const TextForm = (props) => {
               Strikethrough: isStrike,
             }}
           />
-          
+
           <textarea
-            className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${props.theme === "light"
+            className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              props.theme === "light"
                 ? "bg-white border-gray-300 text-gray-900"
-                : "bg-gray-700 border-gray-600 text-white"
-              }`}
+                : "bg-gray-700 border-gray-500 text-white"
+            }`}
             rows="10"
             value={text}
             onChange={handleChange}
-            placeholder="Enter your text here..."
+            placeholder={t("textForm.placeholder")}
           ></textarea>
-          {/* Other elements like file input and grammar results will appear with this block */}
+
           <input
             ref={fileInputRef}
             type="file"
             accept=".txt"
             className="hidden"
-            onChange={(e) => handleFileImport(e.target.files && e.target.files[0])}
+            onChange={(e) =>
+              handleFileImport(e.target.files && e.target.files[0])
+            }
           />
-          {grammarResults.length > 0 && (
-            <div className={`mt-4 p-4 rounded-lg ${props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"}`}>
-              {/* ... grammar results content ... */}
-            </div>
-          )}
         </div>
 
         {/* Animate the button group to fade up after the header */}
         {/* <div className="flex flex-wrap gap-2 my-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+        {/* FUNCTION BUTTONS (keep English labels) */}
+//         <div
+//           className="flex flex-wrap gap-2 my-6"
+//           data-aos="fade-up"
+//           data-aos-delay="200"
+//           data-aos-duration="800"
+//         >
           {textOperations.map((op, i) => (
             op.id === "generate-lorem" ? (
               <div key={i} className="flex items-center gap-2">
@@ -190,14 +189,26 @@ const TextForm = (props) => {
             ) : (
             <button
               key={i}
+              disabled={
+                (!(text && text.trim().length > 0) && !op.allowEmpty) ||
+                (op.label === "Check Grammar" && loadingGrammar)
+              }
+              onClick={op.func}
+              style={buttonStyle}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                (!(text && text.trim().length > 0) && !op.allowEmpty) ||
+                (op.label === "Check Grammar" && loadingGrammar)
               disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar)}
               onClick={op.func}
               style={buttonStyle}
               className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar))
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:scale-105 active:scale-95"
-                }`}
+              }`}
             >
+              {op.label === "Check Grammar" && loadingGrammar
+                ? t("textForm.checking")
+                : op.label}
               {op.id === "grammar-check" && loadingGrammar ? "Checking..." : op.label}
             </button>
             )
@@ -213,15 +224,33 @@ const TextForm = (props) => {
             : "bg-gray-900 text-gray-100 shadow-xl shadow-gray-800/60"
         }`}
       >
-        {/* Animate the summary header separately */}
         <h2
+          className="text-3xl font-bold mb-6 text-center"
+          data-aos="fade-right"
+          data-aos-delay="500"
           className={`text-2xl sm:text-3xl font-bold mb-8 text-center tracking-tight ${
             props.theme === "light" ? "text-gray-800" : "text-gray-100"
           }`}
         >
-          Summary of the Text
+          {t("textForm.summary")}
         </h2>
 
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
+          <div className="p-4 rounded-xl border shadow-sm" data-aos="fade-up" data-aos-delay="600">
+            <p className="text-sm font-medium">{t("textForm.words")}</p>
+            <p className="text-2xl font-semibold">
+              {text.split(/\s+/).filter((el) => el.length !== 0).length}
+            </p>
+          </div>
+          <div className="p-4 rounded-xl border shadow-sm" data-aos="fade-up" data-aos-delay="700">
+            <p className="text-sm font-medium">{t("textForm.characters")}</p>
+            <p className="text-2xl font-semibold">{text.length}</p>
+          </div>
+          <div className="p-4 rounded-xl border shadow-sm" data-aos="fade-up" data-aos-delay="800">
+            <p className="text-sm font-medium">{t("textForm.readingTime")}</p>
+            <p className="text-2xl font-semibold">
+              {(0.008 * text.split(" ").filter((el) => el.length !== 0).length).toFixed(2)}{" "}
+              {t("textForm.minutes")}
         {/* Summary Stats - Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-center place-items-center">
         {/* Words */}
@@ -295,6 +324,14 @@ const TextForm = (props) => {
           </div>
         </div>
 
+        <div data-aos="fade-up" data-aos-delay="1000">
+          <h2 className="text-2xl font-bold mb-4">{t("textForm.preview")}</h2>
+          <p className="text-lg leading-relaxed">
+            {previewText && previewText.length > 0
+              ? previewText
+              : t("textForm.noPreview")}
+          </p>
+        </div>
         {/* Animate the Top Words section */}
         {topWords.length > 0 && (
           <div className="mb-8 text-center">
@@ -359,7 +396,6 @@ const TextForm = (props) => {
 
       {dialogBoxOpen && (
         <DialogBox
-          // question="Are you sure you want to clear the text?"
           setDialogBoxOpen={setDialogBoxOpen}
           setText={setText}
           setPreviewText={setPreviewText}
