@@ -262,21 +262,25 @@ const Navbar = (props) => {
               isDark ? "btn-dark" : "btn-light"
             } transition-all duration-200 flex items-center`}
           >
-            {menuOpen ? <span>Upload</span> : <Upload />}
+            {/* Icon only on desktop (lg:), hidden on smaller */}
+            <Upload className="hidden lg:block" />
+
+            {/* Text only on mobile when menu is open */}
+            {menuOpen && <span className="lg:hidden">Upload</span>}
           </button>
 
           {/* Download Button */}
           <button
             onClick={props.onExport}
-            className={`mr-5 btn ${
+            className={`btn ${
               isDark ? "btn-dark" : "btn-light"
             } transition-all duration-200 flex items-center`}
           >
-            {menuOpen ? (
-              <span>Download</span>
-            ) : (
-              <Download /> 
-            )}
+            {/* Icon only on desktop (lg:), hidden on smaller */}
+            <Download className="hidden lg:block" />
+
+            {/* Text only on mobile when menu is open */}
+            {menuOpen && <span className="lg:hidden">Download</span>}
           </button>
         </div>
 
