@@ -1,4 +1,4 @@
-import { checkGrammar } from "../utils";
+import { checkGrammar, generateLoremIpsum } from "../utils";
 
 export const getTextOperations = (
   text,
@@ -10,7 +10,8 @@ export const getTextOperations = (
   setGrammarResults,
   setLoadingGrammar,
   styles,
-  triggerFileInput
+  triggerFileInput,
+  loremParagraphs
 ) => {
   const { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrike, setIsStrike } = styles;
 
@@ -107,11 +108,15 @@ export const getTextOperations = (
     props.showAlert("Duplicate lines removed.", "success");
   };
 
-  const handleGenerateLorem = () => {
-    const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.`;
-    setText(lorem);
-    setPreviewText(lorem);
-    props.showAlert("Generated lorem ipsum.", "success");
+  const handleGenerateLorem = async () => {
+    try {
+      const lorem = await generateLoremIpsum(loremParagraphs);
+      setText(lorem);
+      setPreviewText(lorem);
+      props.showAlert(`Generated ${loremParagraphs} paragraph(s) of Lorem Ipsum.`, "success");
+    } catch (err) {
+      props.showAlert("Failed to generate Lorem Ipsum.", "error");
+    }
   };
 
   const handleImportFile = () => {
@@ -158,24 +163,24 @@ export const getTextOperations = (
   };
 
   const obj = [
-    { func: handleUpClick, label: "Convert to uppercase" },
-    { func: handleLoClick, label: "Convert to lowercase" },
-    { func: handleRemoveLineBreaks, label: "Remove line breaks", allowEmpty: false },
-    { func: handleTrimEdges, label: "Trim start/end spaces", allowEmpty: false },
-    { func: handleExtraSpaces, label: "Remove extra spaces" },
-    { func: handleCopyClick, label: "Copy text" },
-    { func: handleClearText, label: "Clear text" },
-    { func: handleGrammarCheck, label: "Check Grammar" },
-    { func: handleRemovePunctuation, label: "Remove punctuation" },
-    { func: handleSmartCapitalization, label: "Smart Capitalization" },
-    { func: handleRemoveDuplicateLines, label: "Remove duplicate lines", allowEmpty: false },
-    { func: handleGenerateLorem, label: "Generate lorem ipsum", allowEmpty: true },
-    { func: handleImportFile, label: "Import file", allowEmpty: true },
-    { func: handleExportText, label: "Export text" },
-    { func: handleBold, label: "Bold" },
-    { func: handleItalic, label: "Italic" },
-    { func: handleUnderline, label: "Underline" },
-    { func: handleStrike, label: "Strikethrough", allowEmpty: true },
+    { id: "uppercase", func: handleUpClick, label: "Convert to uppercase" },
+    { id: "lowercase", func: handleLoClick, label: "Convert to lowercase" },
+    { id: "remove-line-breaks", func: handleRemoveLineBreaks, label: "Remove line breaks", allowEmpty: false },
+    { id: "trim-edges", func: handleTrimEdges, label: "Trim start/end spaces", allowEmpty: false },
+    { id: "remove-extra-spaces", func: handleExtraSpaces, label: "Remove extra spaces" },
+    { id: "copy", func: handleCopyClick, label: "Copy text" },
+    { id: "clear", func: handleClearText, label: "Clear text" },
+    { id: "grammar-check", func: handleGrammarCheck, label: "Check Grammar" },
+    { id: "remove-punctuation", func: handleRemovePunctuation, label: "Remove punctuation" },
+    { id: "smart-capitalization", func: handleSmartCapitalization, label: "Smart Capitalization" },
+    { id: "remove-duplicate-lines", func: handleRemoveDuplicateLines, label: "Remove duplicate lines", allowEmpty: false },
+    { id: "generate-lorem", func: handleGenerateLorem, label: "Generate lorem ipsum", allowEmpty: true },
+    { id: "import-file", func: handleImportFile, label: "Import file", allowEmpty: true },
+    { id: "export-text", func: handleExportText, label: "Export text" },
+    { id: "bold", func: handleBold, label: "Bold" },
+    { id: "italic", func: handleItalic, label: "Italic" },
+    { id: "underline", func: handleUnderline, label: "Underline" },
+    { id: "strike", func: handleStrike, label: "Strikethrough", allowEmpty: true },
   ];
 
   return obj;

@@ -16,6 +16,7 @@ const TextForm = (props) => {
   const [isStrike, setIsStrike] = useState(false);
   const [grammarResults, setGrammarResults] = useState([]);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
+  const [loremParagraphs, setLoremParagraphs] = useState(1);
   const fileInputRef = React.useRef();
 
   useEffect(() => {
@@ -58,7 +59,8 @@ const TextForm = (props) => {
     setGrammarResults,
     setLoadingGrammar,
     { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrike, setIsStrike },
-    handleFileInputClick
+    handleFileInputClick,
+    loremParagraphs
   );
 
   const buttonStyle = {
@@ -147,18 +149,43 @@ const TextForm = (props) => {
         {/* Animate the button group to fade up after the header */}
         <div className="flex flex-wrap gap-2 my-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
           {textOperations.map((op, i) => (
+            op.id === "generate-lorem" ? (
+              <div key={i} className="flex items-center gap-2">
+                <button
+                  disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar)}
+                  onClick={op.func}
+                  style={buttonStyle}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar))
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:scale-105 active:scale-95"
+                    }`}
+                >
+                  {op.label}
+                </button>
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={loremParagraphs}
+                  onChange={(e) => setLoremParagraphs(parseInt(e.target.value))}
+                  className="w-24"
+                />
+                <span>{loremParagraphs}</span>
+              </div>
+            ) : (
             <button
               key={i}
-              disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar)}
+              disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar)}
               onClick={op.func}
               style={buttonStyle}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar))
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar))
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:scale-105 active:scale-95"
                 }`}
             >
-              {op.label === "Check Grammar" && loadingGrammar ? "Checking..." : op.label}
+              {op.id === "grammar-check" && loadingGrammar ? "Checking..." : op.label}
             </button>
+            )
           ))}
         </div>
       </div>
