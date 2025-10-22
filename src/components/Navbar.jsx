@@ -10,16 +10,25 @@ import {
 } from "lucide-react";
 
 const Navbar = (props) => {
-  const [animate, setAnimate] = useState(true);
+  const [animate, setAnimate] = useState(false);
+  const [textAnimate, setTextAnimate] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  
+  
   useEffect(() => {
     const timer = setTimeout(() => setAnimate(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+  
+  useEffect(() => {
+    setTextAnimate(true); // trigger animation
+    const timer = setTimeout(() => setTextAnimate(false), 500); // duration of animation
+    return () => clearTimeout(timer);
+  }, [props.currentThemeId]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -191,15 +200,18 @@ const Navbar = (props) => {
     >
       <div className="flex items-center flex-shrink-0 mr-6">
         <Link
-          className="font-bold text-xl tracking-tight hover:text-blue-500 transition-colors"
+          className={`font-bold text-xl tracking-tight hover:text-blue-500 transition-colors ${
+            textAnimate ? 'animate-textChange' : ''
+          }`}
           to="/"
         >
           <strong>{props.title}</strong>
         </Link>
+
       </div>
 
       {/* Hamburger button */}
-      <div className="block lg:hidden">
+      <div className={`block lg:hidden ${textAnimate ? 'animate-textChange' : ''}`}>
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className={`flex items-center px-3 py-2 border rounded transition-colors ${
@@ -230,7 +242,7 @@ const Navbar = (props) => {
           <Link
             className={`block mt-4 lg:inline-block lg:mt-0 mr-4 transition-colors ${
               isDark ? "hover:text-blue-400" : "hover:text-blue-600"
-            }`}
+            } ${textAnimate ? 'animate-textChange' : ''}`}
             to="/"
           >
             Home
@@ -238,14 +250,15 @@ const Navbar = (props) => {
           <Link
             className={`block mt-4 lg:inline-block lg:mt-0 mr-4 transition-colors ${
               isDark ? "hover:text-blue-400" : "hover:text-blue-600"
-            }`}
+            } ${textAnimate ? 'animate-textChange' : ''}`}
             to="/about"
           >
             About
           </Link>
         </div>
 
-        <div className="mt-4 lg:mt-0 flex flex-col lg:flex-row lg:items-center gap-4">
+        <div className={`mt-4 lg:mt-0 flex flex-col lg:flex-row 
+          lg:items-center gap-4 ${textAnimate ? 'animate-textChange' : ''}`}>
           {/* Hidden File Input */}
           <input
             type="file"
@@ -298,13 +311,17 @@ const Navbar = (props) => {
             >
               <div className="flex items-center gap-2">
                 {isDark ? (
-                  <Moon className="w-5 h-5 text-blue-400" />
+                  <Moon className={`w-5 h-5 text-blue-400 ${textAnimate ? 'animate-textChange' : ''}`} />
                 ) : (
-                  <Sun className="w-5 h-5 text-amber-500" />
+                  <Sun className={`w-5 h-5 text-amber-500 ${textAnimate ? 'animate-textChange' : ''}`} />
                 )}
-                <span className="text-sm font-medium hidden sm:inline">
+                <span className={`text-sm font-medium hidden sm:inline transition-all duration-500 ${
+                    textAnimate ? 'translate-y-1 opacity-0 animate-textChange' : ''
+                  }`}
+                >
                   {currentTheme.name}
                 </span>
+
                 <span className="text-lg sm:hidden">{currentTheme.icon}</span>
               </div>
               <ChevronDown

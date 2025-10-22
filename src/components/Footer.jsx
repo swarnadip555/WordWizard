@@ -21,7 +21,7 @@ const Footer = ({ theme }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           
           {/* About Section */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="10">
             <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               WordWizard ✨
             </h3>
@@ -32,7 +32,7 @@ const Footer = ({ theme }) => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="10">
             <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Quick Links
             </h3>
@@ -71,7 +71,7 @@ const Footer = ({ theme }) => {
           </div>
 
           {/* Connect Section */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="10">
             <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Connect
             </h3>
@@ -103,13 +103,13 @@ const Footer = ({ theme }) => {
         </div>
 
         {/* Bottom Bar */}
-        <div className={`pt-6 border-t text-sm text-center ${
+        <div data-aos="fade-up" data-aos-delay="10" className={`pt-6 border-t text-sm text-center ${
           isDark ? 'border-gray-700' : 'border-gray-200'
         }`}>
           <p className="flex items-center justify-center gap-1 flex-wrap">
             Made with 
             <Heart 
-              className={`w-4 h-4 fill-current animate-pulse ${
+              className={`w-4 h-4 fill-current animate-slowPulse ${
                 isDark ? 'text-red-400' : 'text-red-500'
               }`} 
             /> 

@@ -63,6 +63,20 @@ const TextForm = (props) => {
     loremParagraphs
   );
 
+
+
+
+  useEffect(() => {
+  // When text becomes empty, reset formatting states
+  if (!text.trim()) {
+    setIsBold(false);
+    setIsItalic(false);
+    setIsUnderline(false);
+    setIsStrike(false);
+  }
+}, [text]);
+
+
   const buttonStyle = {
     color: props.theme === 'light' ? 'black' : "white",
     backgroundImage: props.theme === 'light' ? 'linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)' : `${props.colorTheme}`,
@@ -87,6 +101,7 @@ const TextForm = (props) => {
     const sortedWords = Object.entries(freq).sort((a, b) => b[1] - a[1]);
     return sortedWords.slice(0, 3); // top 3
   };
+  
 
   // Store top words in a variable to avoid redundant calls
   const topWords = getTopWords(text);
@@ -124,7 +139,7 @@ const TextForm = (props) => {
           <textarea
             className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${props.theme === "light"
                 ? "bg-white border-gray-300 text-gray-900"
-                : "bg-gray-700 border-gray-500 text-white"
+                : "bg-gray-700 border-gray-600 text-white"
               }`}
             rows="10"
             value={text}
@@ -147,7 +162,7 @@ const TextForm = (props) => {
         </div>
 
         {/* Animate the button group to fade up after the header */}
-        <div className="flex flex-wrap gap-2 my-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+        {/* <div className="flex flex-wrap gap-2 my-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
           {textOperations.map((op, i) => (
             op.id === "generate-lorem" ? (
               <div key={i} className="flex items-center gap-2">
@@ -187,11 +202,11 @@ const TextForm = (props) => {
             </button>
             )
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Animate the entire summary card with a zoom effect */}
-      <div
+      <div data-aos="fade-up" data-aos-delay="100"
         className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 ${
           props.theme === "light"
             ? "bg-gradient-to-br from-yellow-100 via-75% via-yellow-400/90 to-yellow-200 border border-yellow-400"
@@ -210,7 +225,7 @@ const TextForm = (props) => {
         {/* Summary Stats - Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-center place-items-center">
         {/* Words */}
-          <div
+          <div 
             className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
               transition-all duration-300 transform 
               hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
@@ -315,29 +330,31 @@ const TextForm = (props) => {
         ></div>
 
         {/* Preview Section */}
-        <h2
-          className={`text-2xl font-bold mb-4 ${
-            props.theme === "light" ? "text-gray-800" : "text-gray-100"
-          }`}
-        >
-          Preview of the Text
-        </h2>
-        <p
-          className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-6 min-h-[100px] transition-all duration-300 hover:shadow-md ${
-            props.theme === "light"
-              ? "bg-yellow-50 border border-yellow-400 text-gray-800"
-              : "bg-gray-800 border border-gray-700 text-gray-100"
-          }`}
-          style={{
-            fontWeight: isBold ? "bold" : "normal",
-            fontStyle: isItalic ? "italic" : "normal",
-            textDecoration: textDecoration,
-          }}
-        >
-          {previewText && previewText.length > 0
-            ? previewText
-            : "Nothing to preview!"}
-        </p>
+        {/* <div data-aos="fade-up" data-aos-delay="100"> */}
+          <h2 
+            className={`text-2xl font-bold mb-4 ${
+              props.theme === "light" ? "text-gray-800" : "text-gray-100"
+            }`}
+          >
+            Preview of the Text
+          </h2>
+          <p 
+            className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-6 min-h-[100px] transition-all duration-300 hover:shadow-md ${
+              props.theme === "light"
+                ? "bg-yellow-50 border border-yellow-400 text-gray-800"
+                : "bg-gray-800 border border-gray-700 text-gray-100"
+            }`}
+            style={{
+              fontWeight: isBold ? "bold" : "normal",
+              fontStyle: isItalic ? "italic" : "normal",
+              textDecoration: textDecoration,
+            }}
+          >
+            {previewText && previewText.length > 0
+              ? previewText
+              : "Nothing to preview!"}
+          </p>
+        {/* </div> */}
       </div>
 
       {dialogBoxOpen && (

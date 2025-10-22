@@ -180,7 +180,7 @@ export const getTextOperations = (
     { id: "bold", func: handleBold, label: "Bold" },
     { id: "italic", func: handleItalic, label: "Italic" },
     { id: "underline", func: handleUnderline, label: "Underline" },
-    { id: "strike", func: handleStrike, label: "Strikethrough", allowEmpty: true },
+    { id: "strike", func: handleStrike, label: "Strikethrough", allowEmpty: false },
   ];
 
   return obj;
