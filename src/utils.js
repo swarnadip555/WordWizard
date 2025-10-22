@@ -34,3 +34,19 @@ export const checkGrammar = async (text) => {
     throw err;
   }
 };
+
+export const generateLoremIpsum = async (paragraphs) => {
+  try {
+    const response = await fetch(
+      `https://loripsum.net/api/${paragraphs}/short/plaintext`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch Lorem Ipsum text.");
+    }
+    const text = await response.text();
+    return text;
+  } catch (err) {
+    console.error("Lorem Ipsum API Error:", err);
+    throw err;
+  }
+};
