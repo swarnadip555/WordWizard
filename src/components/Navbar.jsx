@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Sun, Moon, ChevronDown, Palette } from 'lucide-react';
 import { useTranslation } from "react-i18next";
-
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import {
   Sun,
   Moon,
