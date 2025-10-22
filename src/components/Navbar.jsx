@@ -147,7 +147,7 @@ const Navbar = (props) => {
   return (
     <nav 
       {...(animate ? { 'data-aos': 'fade-up' } : {})} 
-      className={`flex items-center justify-between flex-wrap p-4 transition-all duration-300 ${
+      className={`sticky top-0 z-50 shadow-md flex items-center justify-between flex-wrap p-4 transition-all duration-300 ${
         isDark 
           ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white border-b border-gray-700' 
           : 'bg-gradient-to-r from-white via-gray-50 to-white text-gray-800 border-b border-gray-200'
