@@ -155,13 +155,13 @@ const TextForm = (props) => {
 
         {/* Animate the button group to fade up after the header */}
         {/* <div className="flex flex-wrap gap-2 my-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
-        {/* FUNCTION BUTTONS (keep English labels) */}
-//         <div
-//           className="flex flex-wrap gap-2 my-6"
-//           data-aos="fade-up"
-//           data-aos-delay="200"
-//           data-aos-duration="800"
-//         >
+         FUNCTION BUTTONS (keep English labels) 
+           <div
+             className="flex flex-wrap gap-2 my-6"
+             data-aos="fade-up"
+             data-aos-delay="200"
+             data-aos-duration="800"
+           >
           {textOperations.map((op, i) => (
             op.id === "generate-lorem" ? (
               <div key={i} className="flex items-center gap-2">
