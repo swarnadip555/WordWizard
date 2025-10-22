@@ -14,7 +14,7 @@ const Navbar = (props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const fileInputRef= useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimate(false), 1000);
@@ -245,31 +245,40 @@ const Navbar = (props) => {
           </Link>
         </div>
 
-         <input
-        type="file"
-        accept=".txt"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
+        <div className="mt-4 lg:mt-0 flex flex-col lg:flex-row lg:items-center gap-4">
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            accept=".txt"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
 
-      {/* Visible Upload Button */}
-      <button
-        onClick={handleUploadClick}
-        className={`ml-2 btn ${isDark ? "btn-dark" : "btn-light"}`}
-        style={{ marginRight: "1rem" }}
-      >
-        <Upload/>
-      </button>
+          {/* Upload Button */}
+          <button
+            onClick={handleUploadClick}
+            className={`btn ${
+              isDark ? "btn-dark" : "btn-light"
+            } transition-all duration-200 flex items-center`}
+          >
+            {menuOpen ? <span>Upload</span> : <Upload />}
+          </button>
 
-      {/* Visible Download Button */}
-      <button
-        onClick={props.onExport}
-        className={`mr-6 btn ${isDark ? "btn-dark" : "btn-light"}`}
-      >
-        <Download/>
-      </button>
-
+          {/* Download Button */}
+          <button
+            onClick={props.onExport}
+            className={`mr-5 btn ${
+              isDark ? "btn-dark" : "btn-light"
+            } transition-all duration-200 flex items-center`}
+          >
+            {menuOpen ? (
+              <span>Download</span>
+            ) : (
+              <Download /> 
+            )}
+          </button>
+        </div>
 
         {/* Enhanced Theme Selector */}
         <div className="mt-4 lg:mt-0">
