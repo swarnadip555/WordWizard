@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { getTextOperations } from "../data/textUtils";
 import DialogBox from "./DialogBox";
 import Toolbar from "./Toolbar";
-
-import { motion } from "framer-motion";
 import Aos from "aos";
 
 const TextForm = (props) => {
-  const [text, setText] = useState("");
-  const [previewText, setPreviewText] = useState("");
+  const {
+    text,
+    setText,
+    onFileImport,
+    onExport,
+    showAlert,
+    theme,
+    colorTheme,
+    heading,
+  } = props;
+
+  const [previewText, setPreviewText] = useState(text || "");
   const [dialogBoxOpen, setDialogBoxOpen] = useState(false);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
@@ -16,36 +24,32 @@ const TextForm = (props) => {
   const [isStrike, setIsStrike] = useState(false);
   const [grammarResults, setGrammarResults] = useState([]);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
-  const fileInputRef = React.useRef();
+  const fileInputRef = useRef();
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  useEffect(() => {
+    setPreviewText(text);
+  }, [text]);
 
   useEffect(() => {
     Aos.refresh();
-  }, [props.theme])
+  }, [theme]);
 
   const handleChange = (e) => {
     setText(e.target.value);
-    // Keep preview in sync with typing (operations will update previewText separately)
     setPreviewText(e.target.value);
-  };
-
-  // Import handler for file input (reads file and populates the textarea & preview)
-  const handleFileImport = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const content = ev.target.result;
-      setText(content);
-      setPreviewText(content);
-      props.showAlert("File imported.", "success");
-    };
-    reader.onerror = () => {
-      props.showAlert("Failed to read file.", "error");
-    };
-    reader.readAsText(file, "utf-8");
   };
 
   const handleFileInputClick = () => {
     if (fileInputRef.current) fileInputRef.current.click();
+  };
+
+  const handleFileSelected = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file && onFileImport) {
+      onFileImport(file);
+      e.target.value = null;
+    }
   };
 
   const textOperations = getTextOperations(
@@ -57,23 +61,36 @@ const TextForm = (props) => {
     props,
     setGrammarResults,
     setLoadingGrammar,
-    { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrike, setIsStrike },
-    handleFileInputClick
+    {
+      isBold,
+      setIsBold,
+      isItalic,
+      setIsItalic,
+      isUnderline,
+      setIsUnderline,
+      isStrike,
+      setIsStrike,
+    },
+    handleFileInputClick,
+    onExport // Pass export handler so you can use it inside operations if needed
   );
 
   const buttonStyle = {
-    color: props.theme === 'light' ? 'black' : "white",
-    backgroundImage: props.theme === 'light' ? 'linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)' : `${props.colorTheme}`,
-    filter: props.theme === 'light' ? 'none' : 'brightness(140%)',
-    fontWeight: props.theme === 'light' ? 400 : 300,
-    boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.15)',
-  }
+    color: theme === "light" ? "black" : "white",
+    backgroundImage:
+      theme === "light"
+        ? "linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)"
+        : colorTheme,
+    filter: theme === "light" ? "none" : "brightness(140%)",
+    fontWeight: theme === "light" ? 400 : 300,
+    boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.15)",
+  };
 
-  // Function to get top 3 words
+  // Helper for top words
   const getTopWords = (text) => {
     const words = text
       .toLowerCase()
-      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "") // remove punctuation
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
       .split(/\s+/)
       .filter((word) => word.length > 0);
 
@@ -83,32 +100,30 @@ const TextForm = (props) => {
     });
 
     const sortedWords = Object.entries(freq).sort((a, b) => b[1] - a[1]);
-    return sortedWords.slice(0, 3); // top 3
+    return sortedWords.slice(0, 3);
   };
 
-  // Store top words in a variable to avoid redundant calls
   const topWords = getTopWords(text);
-  const textDecoration = [isUnderline ? "underline" : null, isStrike ? "line-through" : null]
-    .filter(Boolean)
-    .join(" ") || "none";
-
+  const textDecoration =
+    [isUnderline ? "underline" : null, isStrike ? "line-through" : null]
+      .filter(Boolean)
+      .join(" ") || "none";
 
   return (
     <section
-      // We remove the main animation from the section to apply it to the children
-      className={`min-h-screen py-8 ${props.theme === "light" ? "text-gray-900" : "text-white"
-        }`}
+      className={`min-h-screen py-8 ${
+        theme === "light" ? "text-gray-900" : "text-white"
+      }`}
     >
       <div className="container mx-auto px-4 max-w-4xl">
-        {/* Animate the top section (header and textarea) to fade down */}
         <div className="mb-6" data-aos="fade-down" data-aos-duration="800">
-          <h1 className="text-3xl font-bold mb-6">{props.heading}</h1>
+          <h1 className="text-3xl font-bold mb-6">{heading}</h1>
 
-           {/* Toolbar with Lucide Icons */}
+          {/* Toolbar */}
           <Toolbar
             textOperations={textOperations}
-            theme={props.theme}
-            colorTheme={props.colorTheme}
+            theme={theme}
+            colorTheme={colorTheme}
             loadingGrammar={loadingGrammar}
             text={text}
             activeStyles={{
@@ -118,52 +133,96 @@ const TextForm = (props) => {
               Strikethrough: isStrike,
             }}
           />
-          
+
           <textarea
-            className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${props.theme === "light"
+            className={`w-full p-4 rounded-lg border-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              theme === "light"
                 ? "bg-white border-gray-300 text-gray-900"
                 : "bg-gray-700 border-gray-500 text-white"
-              }`}
+            }`}
             rows="10"
             value={text}
             onChange={handleChange}
             placeholder="Enter your text here..."
           ></textarea>
-          {/* Other elements like file input and grammar results will appear with this block */}
+
+          {/* Hidden file input */}
           <input
             ref={fileInputRef}
             type="file"
             accept=".txt"
             className="hidden"
-            onChange={(e) => handleFileImport(e.target.files && e.target.files[0])}
+            onChange={handleFileSelected}
           />
+
+          {/* Grammar results (if any) */}
           {grammarResults.length > 0 && (
-            <div className={`mt-4 p-4 rounded-lg ${props.theme === "light" ? "bg-yellow-50" : "bg-gray-800"}`}>
-              {/* ... grammar results content ... */}
+            <div
+              className={`mt-4 p-4 rounded-lg ${
+                theme === "light" ? "bg-yellow-50" : "bg-gray-800"
+              }`}
+            >
+              {/* Render grammar results here */}
             </div>
           )}
         </div>
 
-        {/* Animate the button group to fade up after the header */}
-        <div className="flex flex-wrap gap-2 my-6" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
-          {textOperations.map((op, i) => (
+        {/* Buttons */}
+        <div
+          className="flex flex-wrap gap-2 my-6"
+          data-aos="fade-up"
+          data-aos-delay="200"
+          data-aos-duration="800"
+        >
+          {textOperations.map((op, i) => {
+            // Disable logic
+            const isDisabled =
+              (!(text && text.trim().length > 0) && !op.allowEmpty) ||
+              (op.label === "Check Grammar" && loadingGrammar);
+            const isActive = activeIndex === i;
+            return (
+              <button
+                key={i}
+                disabled={isDisabled}
+                onClick={() => {
+                  setActiveIndex(i); // Set active index on click
+                  op.func(); // Run operation
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200
+                    ${
+                      isDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:scale-105 active:scale-95"
+                    }
+                      ${
+                        isActive
+                          ? "bg-blue-600 text-white"
+                          : theme === "light"
+                          ? "bg-yellow-200 text-black"
+                          : "bg-gray-700 text-gray-200"
+                      }
+                    `}
+              >
+                {op.label === "Check Grammar" && loadingGrammar
+                  ? "Checking..."
+                  : op.label}
+              </button>
+            );
+          })}
+
+          {/* Export button - if not already included in textOperations */}
+          {onExport && (
             <button
-              key={i}
-              disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar)}
-              onClick={op.func}
+              onClick={onExport}
               style={buttonStyle}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar))
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:scale-105 active:scale-95"
-                }`}
+              className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95"
             >
-              {op.label === "Check Grammar" && loadingGrammar ? "Checking..." : op.label}
+              Export
             </button>
-          ))}
+          )}
         </div>
       </div>
 
-      {/* Animate the entire summary card with a zoom effect */}
       <div
         className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 ${
           props.theme === "light"
@@ -182,16 +241,16 @@ const TextForm = (props) => {
 
         {/* Summary Stats - Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-center place-items-center">
-        {/* Words */}
+          {/* Words */}
           <div
             className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
               transition-all duration-300 transform 
               hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
               ${
-              props.theme === "light"
-                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
-                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
-            }`}
+                props.theme === "light"
+                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+              }`}
           >
             <p
               className={`text-sm font-medium ${
@@ -211,16 +270,16 @@ const TextForm = (props) => {
               transition-all duration-300 transform 
               hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
               ${
-              props.theme === "light"
-                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
-                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
-            }`}
+                props.theme === "light"
+                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+              }`}
           >
             <p
               className={`text-sm font-medium ${
                 props.theme === "light" ? "text-gray-600" : "text-gray-400"
-                }`}
-                >
+              }`}
+            >
               Characters
             </p>
             <p className="text-2xl font-bold">{text.length}</p>
@@ -232,16 +291,16 @@ const TextForm = (props) => {
               transition-all duration-300 transform 
               hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
               ${
-              props.theme === "light"
-                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
-                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
-            }`}
+                props.theme === "light"
+                  ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                  : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+              }`}
           >
             <p
               className={`text-sm font-medium ${
                 props.theme === "light" ? "text-gray-600" : "text-gray-400"
-                }`}
-                >
+              }`}
+            >
               Reading Time
             </p>
             <p className="text-2xl font-bold">
