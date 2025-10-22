@@ -272,7 +272,7 @@ const Navbar = (props) => {
           {/* Download Button */}
           <button
             onClick={props.onExport}
-            className={`btn ${
+            className={`mr-5 btn ${
               isDark ? "btn-dark" : "btn-light"
             } transition-all duration-200 flex items-center`}
           >
