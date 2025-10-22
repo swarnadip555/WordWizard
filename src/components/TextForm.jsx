@@ -15,6 +15,7 @@ const TextForm = (props) => {
   const [isStrike, setIsStrike] = useState(false);
   const [grammarResults, setGrammarResults] = useState([]);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
+  const [loremParagraphs, setLoremParagraphs] = useState(1);
   const fileInputRef = React.useRef();
 
   const { t } = useTranslation();
@@ -57,7 +58,8 @@ const TextForm = (props) => {
     setGrammarResults,
     setLoadingGrammar,
     { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrike, setIsStrike },
-    handleFileInputClick
+    handleFileInputClick,
+    loremParagraphs
   );
 
   const buttonStyle = {
@@ -144,6 +146,30 @@ const TextForm = (props) => {
           data-aos-duration="800"
         >
           {textOperations.map((op, i) => (
+            op.id === "generate-lorem" ? (
+              <div key={i} className="flex items-center gap-2">
+                <button
+                  disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar)}
+                  onClick={op.func}
+                  style={buttonStyle}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.label === "Check Grammar" && loadingGrammar))
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:scale-105 active:scale-95"
+                    }`}
+                >
+                  {op.label}
+                </button>
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={loremParagraphs}
+                  onChange={(e) => setLoremParagraphs(parseInt(e.target.value))}
+                  className="w-24"
+                />
+                <span>{loremParagraphs}</span>
+              </div>
+            ) : (
             <button
               key={i}
               disabled={
@@ -155,6 +181,10 @@ const TextForm = (props) => {
               className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                 (!(text && text.trim().length > 0) && !op.allowEmpty) ||
                 (op.label === "Check Grammar" && loadingGrammar)
+              disabled={(!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar)}
+              onClick={op.func}
+              style={buttonStyle}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${((!(text && text.trim().length > 0) && !op.allowEmpty) || (op.id === "grammar-check" && loadingGrammar))
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:scale-105 active:scale-95"
               }`}
@@ -162,7 +192,9 @@ const TextForm = (props) => {
               {op.label === "Check Grammar" && loadingGrammar
                 ? t("textForm.checking")
                 : op.label}
+              {op.id === "grammar-check" && loadingGrammar ? "Checking..." : op.label}
             </button>
+            )
           ))}
         </div>
       </div>
@@ -177,11 +209,19 @@ const TextForm = (props) => {
         data-aos="zoom-in-up"
         data-aos-delay="400"
         data-aos-duration="800"
+        className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 ${
+          props.theme === "light"
+            ? "bg-gradient-to-br from-yellow-100 via-75% via-yellow-400/90 to-yellow-200 border border-yellow-400"
+            : "bg-gray-900 text-gray-100 shadow-xl shadow-gray-800/60"
+        }`}
       >
         <h2
           className="text-3xl font-bold mb-6 text-center"
           data-aos="fade-right"
           data-aos-delay="500"
+          className={`text-2xl sm:text-3xl font-bold mb-8 text-center tracking-tight ${
+            props.theme === "light" ? "text-gray-800" : "text-gray-100"
+          }`}
         >
           {t("textForm.summary")}
         </h2>
@@ -202,6 +242,75 @@ const TextForm = (props) => {
             <p className="text-2xl font-semibold">
               {(0.008 * text.split(" ").filter((el) => el.length !== 0).length).toFixed(2)}{" "}
               {t("textForm.minutes")}
+        {/* Summary Stats - Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-center place-items-center">
+        {/* Words */}
+          <div
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
+              }`}
+            >
+              Words
+            </p>
+            <p className="text-2xl font-bold">
+              {text.split(/\s+/).filter((el) => el.length !== 0).length}
+            </p>
+          </div>
+
+          {/* Characters */}
+          <div
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+                >
+              Characters
+            </p>
+            <p className="text-2xl font-bold">{text.length}</p>
+          </div>
+
+          {/* Reading Time */}
+          <div
+            className={`w-3/5 md:w-full p-4 rounded-xl border shadow-sm 
+              transition-all duration-300 transform 
+              hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
+              ${
+              props.theme === "light"
+                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                props.theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+                >
+              Reading Time
+            </p>
+            <p className="text-2xl font-bold">
+              {(
+                0.008 * text.split(/\s+/).filter((el) => el.length !== 0).length
+              ).toFixed(2)}{" "}
+              min
             </p>
           </div>
         </div>
@@ -214,6 +323,64 @@ const TextForm = (props) => {
               : t("textForm.noPreview")}
           </p>
         </div>
+        {/* Animate the Top Words section */}
+        {topWords.length > 0 && (
+          <div className="mb-8 text-center">
+            <h3
+              className={`text-xl font-semibold mb-4 ${
+                props.theme === "light" ? "text-gray-800" : "text-gray-100"
+              }`}
+            >
+              Top Words
+            </h3>
+            <div className="flex flex-wrap justify-center gap-2">
+              {topWords.slice(0, 5).map(([word, count], index) => (
+                <span
+                  key={index}
+                  className={`px-3 py-1 text-sm font-medium rounded-full border transition-transform duration-200 hover:scale-110 ${
+                    props.theme === "light"
+                      ? "bg-yellow-200 text-yellow-800 border-yellow-300"
+                      : "bg-gray-700 text-gray-200 border-gray-600"
+                  }`}
+                >
+                  {word} ({count})
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Divider */}
+        <div
+          className={`border-t-2 my-8 ${
+            props.theme === "light" ? "border-yellow-500/50" : "border-gray-700"
+          }`}
+        ></div>
+
+        {/* Preview Section */}
+        <h2
+          className={`text-2xl font-bold mb-4 ${
+            props.theme === "light" ? "text-gray-800" : "text-gray-100"
+          }`}
+        >
+          Preview of the Text
+        </h2>
+        <p
+          className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-6 min-h-[100px] transition-all duration-300 hover:shadow-md ${
+            props.theme === "light"
+              ? "bg-yellow-50 border border-yellow-400 text-gray-800"
+              : "bg-gray-800 border border-gray-700 text-gray-100"
+          }`}
+          style={{
+            fontWeight: isBold ? "bold" : "normal",
+            fontStyle: isItalic ? "italic" : "normal",
+            textDecoration: textDecoration,
+          }}
+        >
+          {previewText && previewText.length > 0
+            ? previewText
+            : "Nothing to preview!"}
+        </p>
       </div>
 
       {dialogBoxOpen && (
