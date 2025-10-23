@@ -1,15 +1,31 @@
 import React, { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
-  Bold, Italic, Underline, Strikethrough,
-  Upload, Download, SpellCheck, Trash2,
-  Copy, ArrowUp, ArrowDown, CornerUpLeft,
-  MoveHorizontal, Type, Repeat, FileText,
-  AlignJustify, Slash,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Upload,
+  Download,
+  SpellCheck,
+  Trash2,
+  Copy,
+  ArrowUp,
+  ArrowDown,
+  CornerUpLeft,
+  MoveHorizontal,
+  Type,
+  Repeat,
+  FileText,
+  AlignJustify,
+  Slash,
 } from "lucide-react";
 
 const ICON_MAP = {
-  Bold, Italic, Underline, Strikethrough,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
   "Import file": Upload,
   "Export text": Download,
   "Check Grammar": SpellCheck,
@@ -88,31 +104,46 @@ const Tooltip = ({ targetRef, text, visible }) => {
   );
 };
 
-const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, activeStyles }) => {
+const Toolbar = ({
+  textOperations,
+  theme,
+  colorTheme,
+  loadingGrammar,
+  text,
+  activeStyles,
+}) => {
   const iconSize = 20;
   const iconColor = theme === "light" ? "#000" : "#fff";
 
   const getIcon = (label) => {
     const Icon = ICON_MAP[label];
-    return Icon ? <Icon size={iconSize} color={iconColor} /> : <FileText size={iconSize} color={iconColor} />;
+    return Icon ? (
+      <Icon size={iconSize} color={iconColor} />
+    ) : (
+      <FileText size={iconSize} color={iconColor} />
+    );
   };
 
   const getFunc = (label) => {
-    const op = textOperations.find(o => o.label === label);
+    const op = textOperations.find((o) => o.label === label);
     return op ? op.func : () => {};
   };
 
   const isDisabled = (label) => {
-    const op = textOperations.find(o => o.label === label);
+    const op = textOperations.find((o) => o.label === label);
     if (!op) return true;
-    return (!(text && text.trim().length > 0) && !op.allowEmpty) || (label === "Check Grammar" && loadingGrammar);
+    return (
+      (!(text && text.trim().length > 0) && !op.allowEmpty) ||
+      (label === "Check Grammar" && loadingGrammar)
+    );
   };
 
   const buttonStyle = {
     color: theme === "light" ? "black" : "white",
-    backgroundImage: theme === "light"
-      ? "linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)"
-      : colorTheme,
+    backgroundImage:
+      theme === "light"
+        ? "linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)"
+        : colorTheme,
     filter: theme === "light" ? "none" : "brightness(140%)",
     fontWeight: theme === "light" ? 400 : 300,
     boxShadow: "2px 2px 8px rgba(0,0,0,0.15)",
@@ -121,9 +152,14 @@ const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, acti
   };
 
   return (
-    <div className={`z-50 mb-4 p-2 rounded-xl border shadow-sm backdrop-blur-sm flex gap-1 overflow-x-auto whitespace-nowrap
-      ${theme === "light" ? "bg-yellow-200/90 border-yellow-300" : "bg-gray-900/90 border-gray-700"}`}>
-      
+    <div
+      className={`z-50 mb-4 p-2 rounded-xl border shadow-sm backdrop-blur-sm flex gap-1 overflow-x-auto whitespace-nowrap
+      ${
+        theme === "light"
+          ? "bg-yellow-200/90 border-yellow-300"
+          : "bg-gray-900/90 border-gray-700"
+      }`}
+    >
       {BUTTONS.map((label, idx) => {
         const isActive = activeStyles?.[label];
         const altText = ALT_TEXT[label] || label;
@@ -139,7 +175,11 @@ const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, acti
               onMouseEnter={() => setHover(true)}
               onMouseLeave={() => setHover(false)}
               className={`relative flex items-center justify-center rounded-md transition-all
-                ${isDisabled(label) ? "opacity-50 cursor-not-allowed" : "hover:scale-105"}
+                ${
+                  isDisabled(label)
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105"
+                }
                 ${isActive ? "ring-2 ring-yellow-400 shadow" : ""}`}
               style={{
                 ...buttonStyle,
@@ -149,9 +189,15 @@ const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, acti
                     : "linear-gradient(to right, #21252dff, #39414fff)"
                   : buttonStyle.backgroundImage,
                 border: isActive
-                  ? theme === "light" ? "1px solid #fbbf24" : "1px solid #3f3f46"
+                  ? theme === "light"
+                    ? "1px solid #fbbf24"
+                    : "1px solid #3f3f46"
                   : buttonStyle.border,
-                color: isActive ? (theme === "light" ? "#000" : "#fff") : buttonStyle.color,
+                color: isActive
+                  ? theme === "light"
+                    ? "#000"
+                    : "#fff"
+                  : buttonStyle.color,
               }}
             >
               {getIcon(label)}
