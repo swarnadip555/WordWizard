@@ -1,4 +1,6 @@
 import React, { useState, useRef } from "react";
+import { motion } from "framer-motion";
+
 import { createPortal } from "react-dom";
 import {
   Bold, Italic, Underline, Strikethrough,
@@ -105,9 +107,9 @@ const Tooltip = ({ targetRef, text, visible }) => {
   );
 };
 
-const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, activeStyles }) => {
+const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, activeStyles, loremParagraphs, setLoremParagraphs }) => {
   const iconSize = 20;
-  const iconColor = theme === "light" ? "#000" : "#fff";
+  const iconColor = theme === "light" ? "#040451ff" : "#fff";
 
   const getIcon = (label) => {
     const Icon = ICON_MAP[label];
@@ -128,7 +130,7 @@ const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, acti
   const buttonStyle = {
     color: theme === "light" ? "black" : "white",
     backgroundImage: theme === "light"
-      ? "linear-gradient(135deg, #faffa3 0%, #f0f0a8 100%)"
+      ? "linear-gradient(120deg, #b6cef3ff 0%, #58aaf7ff 100%)"
       : colorTheme,
     filter: theme === "light" ? "none" : "brightness(140%)",
     fontWeight: theme === "light" ? 400 : 300,
@@ -139,7 +141,7 @@ const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, acti
 
   return (
     <div className={`z-50 mb-4 p-2 rounded-xl border shadow-sm backdrop-blur-sm flex gap-1 overflow-x-auto whitespace-nowrap
-      ${theme === "light" ? "bg-yellow-200/90 border-yellow-400" : "bg-gray-900/90 border-gray-700"}`}>
+      ${theme === "light" ? "bg-blue-50/90 border-blue-400" : "bg-gray-900/90 border-gray-700"}`}>
       
       {BUTTONS.map((label, idx) => {
         const isActive = activeStyles?.[label];
@@ -149,7 +151,7 @@ const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, acti
 
         return (
           <React.Fragment key={idx}>
-            <button
+            <motion.button
               ref={btnRef}
               disabled={isDisabled(label)}
               onClick={getFunc(label)}
@@ -162,20 +164,36 @@ const Toolbar = ({ textOperations, theme, colorTheme, loadingGrammar, text, acti
                 ...buttonStyle,
                 background: isActive
                   ? theme === "light"
-                    ? "linear-gradient(to right, #ffde39ff, #fecc01ff)"
+                    ? "linear-gradient(to right, #2c75dbff, #80adf6ff)"
                     : "linear-gradient(to right, #21252dff, #39414fff)"
                   : buttonStyle.backgroundImage,
                 border: isActive
-                  ? theme === "light" ? "1px solid #fbbf24" : "1px solid #3f3f46"
+                  ? theme === "light" ? "1px solid #0244f8ff" : "1px solid #3f3f46"
                   : buttonStyle.border,
                 color: isActive ? (theme === "light" ? "#000" : "#fff") : buttonStyle.color,
               }}
             >
               {getIcon(label)}
-            </button>
+            </motion.button>
 
             {/* Portal tooltip */}
             <Tooltip targetRef={btnRef} text={altText} visible={hover} />
+            {label === "Generate lorem ipsum" && (
+              <div className="flex items-center gap-1 ml-2">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={loremParagraphs}
+                  onChange={(e) => setLoremParagraphs(parseInt(e.target.value))}
+                  className="w-20 accent-blue-500 cursor-pointer"
+                />
+                <span className="text-xs font-bold text-gray-700 dark:text-gray-600">
+                  {loremParagraphs}
+                </span>
+              </div>
+            )}
+            
           </React.Fragment>
         );
       })}

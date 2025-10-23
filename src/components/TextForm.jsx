@@ -133,6 +133,8 @@ const TextForm = (props) => {
               Underline: isUnderline,
               Strikethrough: isStrike,
             }}
+            loremParagraphs={loremParagraphs}
+            setLoremParagraphs={setLoremParagraphs}
           />
 
           <textarea
@@ -158,7 +160,7 @@ const TextForm = (props) => {
         </div>
 
         {/* FUNCTION BUTTONS */}
-        <div
+        {/* <div
           className="flex flex-wrap gap-2 my-6"
           data-aos="fade-up"
           data-aos-delay="200"
@@ -208,13 +210,14 @@ const TextForm = (props) => {
               </button>
             )
           ))}
-        </div> */}
+        </div>  */}
       </div>
 
       {/* SUMMARY CARD */}
       <div
-        className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 ${props.theme === "light"
-          ? "bg-gradient-to-br from-yellow-100 via-75% via-yellow-400/90 to-yellow-200 border border-yellow-400"
+        className={`my-8 mx-4 max-w-4xl sm:mx-auto px-4 sm:px-6 py-8 rounded-2xl shadow-lg transition-all duration-300 
+          ${props.theme === "light"
+          ? "bg-gradient-to-br from-blue-100 via-75% via-blue-400/90 to-blue-200 border border-blue-400"
           : "bg-gray-900 text-gray-100 shadow-xl shadow-gray-800/60"
           }`}
         data-aos="zoom-in-up"
@@ -238,7 +241,7 @@ const TextForm = (props) => {
               transition-all duration-300 transform 
               hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
               ${props.theme === "light"
-                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                ? "bg-gradient-to-r from-blue-500 to-blue-300 border-blue-500"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
               }`}
             data-aos="fade-up"
@@ -261,7 +264,7 @@ const TextForm = (props) => {
               transition-all duration-300 transform 
               hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
               ${props.theme === "light"
-                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                ? "bg-gradient-to-r from-blue-500 to-blue-300 border-blue-500"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
               }`}
             data-aos="fade-up"
@@ -282,7 +285,7 @@ const TextForm = (props) => {
               transition-all duration-300 transform 
               hover:-translate-y-1 hover:scale-105 hover:shadow-lg 
               ${props.theme === "light"
-                ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                ? "bg-gradient-to-r from-blue-500 to-blue-300 border-blue-500"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
               }`}
             data-aos="fade-up"
@@ -305,7 +308,7 @@ const TextForm = (props) => {
 
         {/* Top Words section */}
         {topWords.length > 0 && (
-          <div className="mb-8 text-center" data-aos="fade-up" data-aos-delay="900">
+          <div className="mb-8 text-center" data-aos="fade-up" data-aos-delay="50">
             <h3
               className={`text-xl font-semibold mb-4 ${props.theme === "light" ? "text-gray-800" : "text-gray-100"
                 }`}
@@ -317,7 +320,7 @@ const TextForm = (props) => {
                 <span
                   key={index}
                   className={`px-3 py-1 text-sm font-medium rounded-full border transition-transform duration-200 hover:scale-110 ${props.theme === "light"
-                    ? "bg-yellow-200 text-yellow-800 border-yellow-300"
+                    ? "bg-blue-200 text-blue-800 border-blue-500"
                     : "bg-gray-700 text-gray-200 border-gray-600"
                     }`}
                 >
@@ -330,12 +333,12 @@ const TextForm = (props) => {
 
         {/* Divider */}
         <div
-          className={`border-t-2 my-8 ${props.theme === "light" ? "border-yellow-500/50" : "border-gray-700"
+          className={`border-t-2 my-8 ${props.theme === "light" ? "border-blue-500/50" : "border-gray-700"
             }`}
         ></div>
 
         {/* Preview Section */}
-        <div data-aos="fade-up" data-aos-delay="1000">
+        <div data-aos="fade-up" data-aos-delay="10">
           <h2
             className={`text-2xl font-bold mb-4 ${props.theme === "light" ? "text-gray-800" : "text-gray-100"
               }`}
@@ -344,7 +347,7 @@ const TextForm = (props) => {
           </h2>
           <p
             className={`text-lg leading-relaxed whitespace-pre-wrap break-words rounded-xl p-6 min-h-[100px] transition-all duration-300 hover:shadow-md ${props.theme === "light"
-              ? "bg-yellow-50 border border-yellow-400 text-gray-800"
+              ? "bg-blue-100 border border-blue-400 text-gray-800"
               : "bg-gray-800 border border-gray-700 text-gray-100"
               }`}
             style={{
