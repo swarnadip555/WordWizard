@@ -244,7 +244,7 @@ const Navbar = (props) => {
           } lg:block`}
       >
         {/* Links */}
-        <div className="text-sm lg:flex-grow">
+        <div className={`text-sm lg:flex-grow ${textAnimate ? 'animate-textChange' : ''}`}>
           <Link
             className={`block mt-4 lg:inline-block lg:mt-0 mr-4 transition-colors ${isDark ? "hover:text-blue-400" : "hover:text-blue-600"
               }`}
@@ -262,13 +262,13 @@ const Navbar = (props) => {
         </div>
 
         {/* Language Toggle */}
-        <div className="flex items-center gap-2 mt-4 lg:mt-0 mr-4">
+        <div className={`flex items-center gap-2 mt-4 lg:mt-0 mr-4 ${textAnimate ? 'animate-textChange' : ''} `}>
           <button
             onClick={() => changeLanguage('en')}
             className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${i18n.language === 'en'
                 ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
                 : isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'
-              }`}
+              } cursor-pointer`}
           >
             EN
           </button>
@@ -278,13 +278,13 @@ const Navbar = (props) => {
             className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${i18n.language === 'hi'
                 ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
                 : isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'
-              }`}
+              } cursor-pointer`}
           >
             हिंदी
           </button>
         </div>
 
-        <div className="mt-4 lg:mt-0 flex flex-col lg:flex-row lg:items-center gap-4">
+        <div className={`mt-4 lg:mt-0 flex flex-col lg:flex-row lg:items-center gap-4 ${textAnimate ? 'animate-textChange' : '' } `}>
           {/* Hidden File Input */}
           <input
             type="file"
@@ -298,7 +298,7 @@ const Navbar = (props) => {
           <button
             onClick={handleUploadClick}
             className={`btn ${isDark ? "btn-dark" : "btn-light"
-              } transition-all duration-200 flex items-center`}
+              } transition-all duration-200 flex items-center cursor-pointer`}
           >
             {/* Icon only on desktop (lg:), hidden on smaller */}
             <Upload className="hidden lg:block" />
@@ -311,7 +311,7 @@ const Navbar = (props) => {
           <button
             onClick={props.onExport}
             className={`mr-5 btn ${isDark ? "btn-dark" : "btn-light"
-              } transition-all duration-200 flex items-center`}
+              } transition-all duration-200 flex items-center cursor-pointer`}
           >
             {/* Icon only on desktop (lg:), hidden on smaller */}
             <Download className="hidden lg:block" />
@@ -329,7 +329,7 @@ const Navbar = (props) => {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 ${isDark
                   ? "bg-gray-800 hover:bg-gray-700 text-white"
                   : "bg-gray-100 hover:bg-gray-200 text-gray-800"
-                }`}
+                } cursor-pointer`}
               aria-label="Select theme"
             >
               <div className="flex items-center gap-2">
@@ -359,7 +359,7 @@ const Navbar = (props) => {
                 className={`absolute right-0 mt-2 w-72 rounded-xl shadow-2xl overflow-hidden z-50 animate-fadeIn ${isDark
                     ? "bg-gray-800 border border-gray-700"
                     : "bg-white border border-gray-200"
-                  }`}
+                  } `}
               >
                 <div className="max-h-96 overflow-y-auto">
                   {/* Dark Themes Section */}
@@ -367,7 +367,7 @@ const Navbar = (props) => {
                     className={`px-3 py-2 text-xs font-semibold uppercase tracking-wider ${isDark
                         ? "text-gray-400 bg-gray-900"
                         : "text-gray-500 bg-gray-50"
-                      }`}
+                      } `}
                   >
                     <div className="flex items-center gap-2">
                       <Moon className="w-3 h-3" />
