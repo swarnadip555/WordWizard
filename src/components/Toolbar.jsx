@@ -1,4 +1,6 @@
 import React, { useState, useRef } from "react";
+import { motion } from "framer-motion";
+
 import { createPortal } from "react-dom";
 import {
   Bold,
@@ -47,8 +49,8 @@ const ALT_TEXT = {
   Italic: "Italic Text",
   Underline: "Underline Text",
   Strikethrough: "Strikethrough Text",
-  "Import file": "Upload a text file",
-  "Export text": "Download the current text",
+  // "Import file": "Upload a text file",
+  // "Export text": "Download the current text",
   "Check Grammar": "Check the grammar of your text",
   "Clear text": "Clear all text",
   "Copy text": "Copy text to clipboard",
@@ -65,24 +67,37 @@ const ALT_TEXT = {
 
 const BUTTONS = Object.keys(ICON_MAP);
 
-// Portal-based tooltip
+// Portal-based tooltip with scroll tracking + fade animation
 const Tooltip = ({ targetRef, text, visible }) => {
   const [coords, setCoords] = useState({ top: 0, left: 0 });
+  const tooltipRef = useRef(null);
 
-  React.useEffect(() => {
-    if (targetRef.current && visible) {
+  const updatePosition = () => {
+    if (targetRef.current) {
       const rect = targetRef.current.getBoundingClientRect();
       setCoords({
-        top: rect.top - 30, // 30px above button
-        left: rect.left + rect.width / 2,
+        top: rect.top + window.scrollY - 35, // account for scroll
+        left: rect.left + rect.width / 2 + window.scrollX,
       });
     }
-  }, [targetRef, visible]);
+  };
 
-  if (!visible) return null;
+  React.useEffect(() => {
+    if (visible) updatePosition();
+
+    // Recalculate when scrolling or resizing
+    window.addEventListener("scroll", updatePosition);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      window.removeEventListener("scroll", updatePosition);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [visible]);
 
   return createPortal(
     <div
+      ref={tooltipRef}
       style={{
         position: "absolute",
         top: coords.top,
@@ -90,12 +105,16 @@ const Tooltip = ({ targetRef, text, visible }) => {
         transform: "translateX(-50%)",
         background: "#111",
         color: "#fff",
-        padding: "0.25rem 0.5rem",
-        borderRadius: "0.25rem",
+        padding: "0.35rem 0.6rem",
+        borderRadius: "0.35rem",
         fontSize: "0.75rem",
         pointerEvents: "none",
         whiteSpace: "nowrap",
         zIndex: 9999,
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.2s ease-out, transform 0.2s ease-out",
+        transformOrigin: "bottom center",
+        transform: `translateX(-50%) translateY(${visible ? "0" : "5px"})`,
       }}
     >
       {text}
@@ -113,7 +132,7 @@ const Toolbar = ({
   activeStyles,
 }) => {
   const iconSize = 20;
-  const iconColor = theme === "light" ? "#000" : "#fff";
+  const iconColor = theme === "light" ? "#040451ff" : "#fff";
 
   const getIcon = (label) => {
     const Icon = ICON_MAP[label];
@@ -168,7 +187,7 @@ const Toolbar = ({
 
         return (
           <React.Fragment key={idx}>
-            <button
+            <motion.button
               ref={btnRef}
               disabled={isDisabled(label)}
               onClick={getFunc(label)}
@@ -181,11 +200,11 @@ const Toolbar = ({
                     : "hover:scale-105"
                 }
                 ${isActive ? "ring-2 ring-yellow-400 shadow" : ""}`}
-              style={{
+                style={{
                 ...buttonStyle,
                 background: isActive
                   ? theme === "light"
-                    ? "linear-gradient(to right, #ffde39ff, #fecc01ff)"
+                    ? "linear-gradient(to right, #2c75dbff, #80adf6ff)"
                     : "linear-gradient(to right, #21252dff, #39414fff)"
                   : buttonStyle.backgroundImage,
                 border: isActive
@@ -201,10 +220,26 @@ const Toolbar = ({
               }}
             >
               {getIcon(label)}
-            </button>
+            </motion.button>
 
             {/* Portal tooltip */}
             <Tooltip targetRef={btnRef} text={altText} visible={hover} />
+            {label === "Generate lorem ipsum" && (
+              <div className="flex items-center gap-1 ml-2">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={loremParagraphs}
+                  onChange={(e) => setLoremParagraphs(parseInt(e.target.value))}
+                  className="w-20 accent-blue-500 cursor-pointer"
+                />
+                <span className="text-xs font-bold text-gray-700 dark:text-gray-600">
+                  {loremParagraphs}
+                </span>
+              </div>
+            )}
+            
           </React.Fragment>
         );
       })}

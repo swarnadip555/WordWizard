@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-const Welcome = () => {
+const Welcome = ({ theme }) => {
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -17,6 +17,7 @@ const Welcome = () => {
     >
       Welcome to WordWizard!
     </h1>
+
   );
 };
 
