@@ -1,5 +1,3 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import {
   Sun,
@@ -17,7 +15,6 @@ const Navbar = (props) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { t, i18n } = useTranslation();
-
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -200,11 +197,12 @@ const Navbar = (props) => {
 
   return (
     <nav
-      {...(animate ? { 'data-aos': 'fade-up' } : {})}
-      className={`sticky top-0 z-50 shadow-md flex items-center justify-between flex-wrap p-4 transition-all duration-300 ${isDark
-          ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white border-b border-gray-700'
-          : 'bg-gradient-to-r from-white via-gray-50 to-white text-gray-800 border-b border-gray-200'
-        }`}
+      {...(animate ? { "data-aos": "fade-up" } : {})}
+      className={`sticky top-0 z-50 shadow-md flex items-center justify-between flex-wrap p-4 transition-all duration-300 ${
+        isDark
+          ? "bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white border-b border-gray-700"
+          : "bg-gradient-to-r from-white via-gray-50 to-white text-gray-800 border-b border-gray-200"
+      }`}
     >
       <div className="flex items-center flex-shrink-0 mr-6">
         <Link
@@ -262,23 +260,33 @@ const Navbar = (props) => {
         </div>
 
         {/* Language Toggle */}
-        <div className={`flex items-center gap-2 mt-4 lg:mt-0 mr-4 ${textAnimate ? 'animate-textChange' : ''} `}>
+        <div className="flex items-center gap-2 mt-4 lg:mt-0 mr-4">
           <button
-            onClick={() => changeLanguage('en')}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${i18n.language === 'en'
-                ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
-                : isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'
-              } cursor-pointer`}
+            onClick={() => changeLanguage("en")}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+              i18n.language === "en"
+                ? isDark
+                  ? "bg-gray-700 text-white"
+                  : "bg-gray-200 text-gray-900"
+                : isDark
+                ? "text-gray-300 hover:text-white"
+                : "text-gray-700 hover:text-gray-900"
+            }`}
           >
             EN
           </button>
           <span>|</span>
           <button
-            onClick={() => changeLanguage('hi')}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${i18n.language === 'hi'
-                ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
-                : isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'
-              } cursor-pointer`}
+            onClick={() => changeLanguage("hi")}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+              i18n.language === "hi"
+                ? isDark
+                  ? "bg-gray-700 text-white"
+                  : "bg-gray-200 text-gray-900"
+                : isDark
+                ? "text-gray-300 hover:text-white"
+                : "text-gray-700 hover:text-gray-900"
+            }`}
           >
             हिंदी
           </button>
