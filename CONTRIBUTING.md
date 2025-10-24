@@ -6,55 +6,6 @@ WordWizard is an open-source word and character counter built with React + Vite 
 
 ---
 
-## How to Contribute
-
-1. **Fork the repository**  
-   Click the “Fork” button at the top-right corner of this repository.
-
-2. **Clone your fork locally**
-
-```bash
-git clone https://github.com/<your-username>/WordWizard.git
-cd WordWizard
-```
-
-3. **Create a new branch for your work**
-
-```bash
-git checkout -b feature-name
-```
-
-4. **Make your changes**
-
-- Add features, fix bugs, or improve documentation.
-- Keep changes focused and self-contained.
-
-5. **Commit your changes**
-
-```bash
-git add .
-git commit -m "feat: short description of your change"
-```
-
-6. **Push your branch**
-
-```bash
-git push origin feature-name
-```
-
-7. **Open a Pull Request (PR)**
-
-- Base branch: `main` of the original repo
-- Compare: your feature branch
-
-If your PR fixes an issue, mention it in the description:
-
-```text
-Fixes #<issue-number>
-```
-
----
-
 ## Contribution Guidelines
 
 - Keep PRs small and focused.
@@ -64,8 +15,95 @@ Fixes #<issue-number>
 
 ---
 
-## Labels to Look For
+## Issue Template
 
-- `hacktoberfest` – issues eligible for Hacktoberfest
-- `good first issue` – beginner-friendly issues
-- `help wanted` – issues that need contributions
+### 🐞 Issue Description
+
+<!-- A clear and concise description of what the bug or issue is. -->
+Example: When I click the "Submit" button, the page does not respond and no data is saved.
+
+---
+
+### ✅ Expected Behavior
+
+<!-- Describe what you expected to happen. -->
+Example: After clicking "Submit", the form should save the data and redirect to the confirmation page.
+
+---
+
+### ⚙️ Steps To Reproduce
+
+<!-- Steps to reproduce the issue. -->
+1. Go to the target page or feature
+2. Perform the action
+3. Observe the error or unexpected result
+
+---
+
+### 📸 Screenshots
+
+<!-- Add screenshots, error logs, or console output if it helps illustrate the issue. -->
+Example:
+
+### 🧠 Additional Context
+
+<!-- Add any other context or information about the problem here. -->
+Example: This issue appeared after the recent code refactor.
+
+---
+
+## Pull Request Template
+
+### 📝 Description
+
+<!-- A clear and concise description of what this PR does. -->
+Example: This PR fixes a validation bug in the form submission logic.
+
+Fixes #<issue_number> (if applicable)
+
+---
+
+### 🔍 Type of Change
+
+<!-- Please check the relevant options. -->
+- [ ] 🐞 Bug fix (non-breaking change which fixes an issue)
+- [ ] ✨ New feature (non-breaking change which adds functionality)
+- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] 🧹 Code refactor (cleanup or optimization)
+- [ ] 🧪 Tests added/updated
+- [ ] 📝 Documentation update
+
+---
+
+### 🧪 How Has This Been Tested?
+
+<!-- Describe the tests that you ran to verify your changes. -->
+
+Steps:
+
+1. Run the application
+2. Perform the relevant action or API call
+3. Confirm the expected result occurs
+
+### 📸 Screenshots / Demo (if applicable)
+
+<!-- Add screenshots, GIFs, or short video links showing your changes in action. -->
+
+---
+
+### 🧠 Checklist
+
+- [ ] My code follows the project's coding style and conventions
+- [ ] I have performed a self-review of my code
+- [ ] I have commented my code where necessary
+- [ ] I have updated related documentation (if applicable)
+- [ ] My changes generate no new warnings or errors
+- [ ] I have linked related issue numbers (if any)
+- [ ] All tests pass successfully
+
+---
+
+### 💬 Additional Notes
+
+<!-- Add any other information for reviewers or maintainers. -->
+Example: This update prepares the base for future UI enhancements.

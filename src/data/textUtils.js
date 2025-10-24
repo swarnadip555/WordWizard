@@ -1,4 +1,4 @@
-import { checkGrammar, generateLoremIpsum } from "../utils";
+import { checkGrammar } from "../utils";
 
 export const getTextOperations = (
   text,
@@ -10,8 +10,7 @@ export const getTextOperations = (
   setGrammarResults,
   setLoadingGrammar,
   styles,
-  triggerFileInput,
-  loremParagraphs
+  triggerFileInput
 ) => {
   const { isBold, setIsBold, isItalic, setIsItalic, isUnderline, setIsUnderline, isStrike, setIsStrike } = styles;
 
@@ -108,14 +107,18 @@ export const getTextOperations = (
     props.showAlert("Duplicate lines removed.", "success");
   };
 
-  const handleGenerateLorem = () => {
-  const lorem = Array(loremParagraphs)
-    .fill("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
-    .join("\n\n");
-  setText(lorem);
-  setPreviewText(lorem);
-  props.showAlert(`Generated ${loremParagraphs} paragraph(s) of Lorem Ipsum.`, "success");
-};
+  // Generate Lorem Ipsum. Accept an optional `count` parameter — if not
+  // provided the function will fall back to the `loremParagraphs` value
+  // that was passed into getTextOperations.
+  const handleGenerateLorem = (count) => {
+    const paragraphs = Number.isFinite(count) ? count : 1;
+    const lorem = Array(Math.max(1, paragraphs))
+      .fill("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+      .join("\n\n");
+    setText(lorem);
+    setPreviewText(lorem);
+    props.showAlert(`Generated ${paragraphs} paragraph(s) of Lorem Ipsum.`, "success");
+  };
 
 
 

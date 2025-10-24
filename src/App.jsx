@@ -170,7 +170,6 @@ function App() {
   }, []);
 
   return (
-    <>
       <Router>
         {showWelcome ? (
           <div
@@ -200,8 +199,7 @@ function App() {
               onExport={handleExport}
             />
 
-            {/* This alert is not required */}
-            {/* <Alert alert={alert} theme={theme} /> */}
+            <Alert alert={alert} theme={theme} />
 
             {/* ADD flex-1 TO MAIN CONTENT */}
             <main className="flex-1">
@@ -233,7 +231,6 @@ function App() {
           </div>
         )}
       </Router>
-    </>
   );
 }
 
