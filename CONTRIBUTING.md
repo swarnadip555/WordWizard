@@ -74,12 +74,13 @@ Fixes #<issue_number> (if applicable)
 ### 🔍 Type of Change
 
 <!-- Please check the relevant options. -->
-- [ ] 🐞 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 🧹 Code refactor (cleanup or optimization)
-- [ ] 🧪 Tests added/updated
-- [ ] 📝 Documentation update
+<!-- Put x between [] -->
+- [] 🐞 Bug fix (non-breaking change which fixes an issue)
+- [] ✨ New feature (non-breaking change which adds functionality)
+- [] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [] 🧹 Code refactor (cleanup or optimization)
+- [] 🧪 Tests added/updated
+- [] 📝 Documentation update
 
 ---
 
@@ -101,13 +102,14 @@ Steps:
 
 ### 🧠 Checklist
 
-- [ ] My code follows the project's coding style and conventions
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code where necessary
-- [ ] I have updated related documentation (if applicable)
-- [ ] My changes generate no new warnings or errors
-- [ ] I have linked related issue numbers (if any)
-- [ ] All tests pass successfully
+<!-- Put x between [] -->
+- [] My code follows the project's coding style and conventions
+- [] I have performed a self-review of my code
+- [] I have commented my code where necessary
+- [] I have updated related documentation (if applicable)
+- [] My changes generate no new warnings or errors
+- [] I have linked related issue numbers (if any)
+- [] All tests pass successfully
 
 ---
 
