@@ -17,6 +17,7 @@ WordWizard is an open-source word and character counter built with React + Vite 
 
 ## Issue Template
 
+```
 ### 🐞 Issue Description
 
 <!-- A clear and concise description of what the bug or issue is. -->
@@ -49,11 +50,13 @@ Example:
 
 <!-- Add any other context or information about the problem here. -->
 Example: This issue appeared after the recent code refactor.
+```
 
 ---
 
 ## Pull Request Template
 
+```
 ### 📝 Description
 
 <!-- A clear and concise description of what this PR does. -->
@@ -107,3 +110,4 @@ Steps:
 
 <!-- Add any other information for reviewers or maintainers. -->
 Example: This update prepares the base for future UI enhancements.
+```
