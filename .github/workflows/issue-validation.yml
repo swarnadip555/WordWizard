@@ -1,0 +1,194 @@
+name: Issue Template Validation
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+
+jobs:
+  validate-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Issue Description
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueBody = context.payload.issue.body || '';
+            const issueNumber = context.payload.issue.number;
+            const issueAuthor = context.payload.issue.user.login;
+            
+            // Define required sections from the issue template
+            const requiredSections = [
+              { name: 'Issue Description', pattern: /##?\s*🐞\s*Issue Description/i, altPattern: /##?\s*Issue Description/i },
+              { name: 'Expected Behavior', pattern: /##?\s*✅\s*Expected Behavior/i, altPattern: /##?\s*Expected Behavior/i },
+              { name: 'Steps To Reproduce', pattern: /##?\s*⚙️\s*Steps To Reproduce/i, altPattern: /##?\s*Steps To Reproduce/i }
+            ];
+            
+            const missingOrEmpty = [];
+            const warnings = [];
+            
+            // Check for required sections
+            for (const section of requiredSections) {
+              const found = section.pattern.test(issueBody) || section.altPattern.test(issueBody);
+              
+              if (!found) {
+                missingOrEmpty.push(section.name);
+              } else {
+                // Check if section has content (not just comments or placeholders)
+                const sectionMatch = issueBody.match(new RegExp(`${section.pattern.source}[\\s\\S]*?(?=##|$)`, 'i')) ||
+                                   issueBody.match(new RegExp(`${section.altPattern.source}[\\s\\S]*?(?=##|$)`, 'i'));
+                
+                if (sectionMatch) {
+                  const sectionContent = sectionMatch[0]
+                    .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
+                    .replace(/##?\s*[🐞✅⚙️]\s*\w+.*$/m, '') // Remove the header itself
+                    .replace(/Example:.*$/gm, '') // Remove examples
+                    .trim();
+                  
+                  if (sectionContent.length < 10) {
+                    warnings.push(section.name);
+                  }
+                }
+              }
+            }
+            
+            // Check if Steps To Reproduce section has numbered steps
+            const stepsSection = issueBody.match(/##?\s*⚙️\s*Steps To Reproduce[\s\S]*?(?=##|$)/i) ||
+                               issueBody.match(/##?\s*Steps To Reproduce[\s\S]*?(?=##|$)/i);
+            
+            if (stepsSection) {
+              const hasNumberedSteps = /^\s*\d+\.\s+.+/m.test(stepsSection[0]);
+              if (!hasNumberedSteps) {
+                warnings.push('Steps To Reproduce (should contain numbered steps)');
+              }
+            }
+            
+            // Check issue title quality
+            const issueTitle = context.payload.issue.title;
+            if (issueTitle.length < 10) {
+              warnings.push('Issue title is too short (should be descriptive)');
+            }
+            
+            // Check for generic/placeholder titles
+            const genericTitles = ['bug', 'issue', 'problem', 'help', 'error', 'test'];
+            if (genericTitles.includes(issueTitle.toLowerCase().trim())) {
+              warnings.push('Issue title is too generic (please be more specific)');
+            }
+            
+            // Build validation result
+            const hasErrors = missingOrEmpty.length > 0;
+            const hasWarnings = warnings.length > 0;
+            
+            if (hasErrors || hasWarnings) {
+              let commentBody = `## ⚠️ Issue Template Validation\n\n`;
+              commentBody += `Hi @${issueAuthor}, thank you for opening this issue! However, there are some issues with your submission that need to be addressed:\n\n`;
+              
+              if (hasErrors) {
+                commentBody += `### ❌ Missing Required Sections\n\n`;
+                commentBody += `The following required sections are missing from your issue description:\n\n`;
+                missingOrEmpty.forEach(section => {
+                  commentBody += `- **${section}**\n`;
+                });
+                commentBody += `\n`;
+              }
+              
+              if (hasWarnings) {
+                commentBody += `### ⚠️ Incomplete or Empty Sections\n\n`;
+                commentBody += `The following sections appear to be incomplete or need improvement:\n\n`;
+                warnings.forEach(warning => {
+                  commentBody += `- **${warning}**\n`;
+                });
+                commentBody += `\n`;
+              }
+              
+              commentBody += `### 📋 How to Fix\n\n`;
+              commentBody += `Please edit your issue description to include all required sections from our [Issue template in CONTRIBUTING.md](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/CONTRIBUTING.md#issue-template).\n\n`;
+              commentBody += `**Required sections:**\n`;
+              commentBody += `- 🐞 Issue Description (clear description of the bug or issue)\n`;
+              commentBody += `- ✅ Expected Behavior (what you expected to happen)\n`;
+              commentBody += `- ⚙️ Steps To Reproduce (numbered steps to recreate the issue)\n\n`;
+              commentBody += `**Optional but helpful:**\n`;
+              commentBody += `- 📸 Screenshots (error logs, console output, or visual evidence)\n`;
+              commentBody += `- 🧠 Additional Context (any other relevant information)\n\n`;
+              commentBody += `Once you've updated the issue description, this check will run again automatically.\n\n`;
+              commentBody += `---\n`;
+              commentBody += `*This is an automated message. If you believe this is an error, please mention a maintainer.*`;
+              
+              // Post comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: commentBody
+              });
+              
+              // Add labels based on severity
+              const labelsToAdd = ['needs-template-fix'];
+              
+              if (hasErrors) {
+                labelsToAdd.push('invalid');
+              }
+              
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                labels: labelsToAdd
+              });
+              
+              if (hasErrors) {
+                core.setFailed('Issue description is missing required sections from the template.');
+              } else {
+                core.warning('Issue description has incomplete sections.');
+              }
+            } else {
+              // Issue is valid - remove the labels if they exist and add success comment
+              try {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  name: 'needs-template-fix'
+                });
+              } catch (error) {
+                // Label might not exist, that's okay
+              }
+              
+              try {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  name: 'invalid'
+                });
+              } catch (error) {
+                // Label might not exist, that's okay
+              }
+              
+              // Check if we previously commented, and if so, add a success comment
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber
+              });
+              
+              const botComments = comments.data.filter(
+                comment => comment.user.type === 'Bot' && comment.body.includes('Issue Template Validation')
+              );
+              
+              if (botComments.length > 0) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  body: `## ✅ Issue Template Validation Passed\n\nThank you @${issueAuthor}! Your issue description now includes all required sections. 🎉\n\nA maintainer will review this soon.`
+                });
+              }
+              
+              core.info('Issue description is valid!');
+            }

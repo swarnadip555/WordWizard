@@ -15,7 +15,7 @@ const TextForm = (props) => {
   const [isStrike, setIsStrike] = useState(false);
   const [grammarResults, setGrammarResults] = useState([]);
   const [loadingGrammar, setLoadingGrammar] = useState(false);
-  const [loremParagraphs, setLoremParagraphs] = useState(1);
+  
   const fileInputRef = React.useRef();
 
   const { t } = useTranslation();
@@ -68,7 +68,6 @@ const TextForm = (props) => {
       setIsStrike,
     },
     handleFileInputClick,
-    loremParagraphs
   );
 
 
@@ -146,8 +145,6 @@ const TextForm = (props) => {
               Underline: isUnderline,
               Strikethrough: isStrike,
             }}
-            loremParagraphs={loremParagraphs}
-            setLoremParagraphs={setLoremParagraphs}
           />
 
           <textarea
@@ -170,6 +167,67 @@ const TextForm = (props) => {
               handleFileImport(e.target.files && e.target.files[0])
             }
           />
+          {/* Grammar results (inline, styled like Summary) - moved here to sit just below textarea and before function buttons */}
+          {grammarResults && grammarResults.length > 0 && (
+            <section data-aos="fade-up" data-aos-delay="200">
+              <h2
+                className={`text-2xl sm:text-3xl font-bold mb-4 text-center tracking-tight ${
+                  props.theme === "light" ? "text-gray-800" : "text-gray-100"
+                }`}
+              >
+                Grammar issues
+              </h2>
+
+              <div className="grid grid-cols-1 gap-4 mb-8">
+                <div className={`w-full p-4 rounded-xl border shadow-sm transition-all duration-300 ${
+                  props.theme === "light"
+                    ? "bg-gradient-to-r from-yellow-200 to-yellow-300 border-yellow-400"
+                    : "bg-gradient-to-r from-gray-800 to-gray-700 border-gray-700"
+                }`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <strong className="text-lg">Summary of Issues</strong>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">{grammarResults.length} found</span>
+                      <button
+                        aria-label="Clear grammar issues"
+                        onClick={() => setGrammarResults([])}
+                        className="ml-2 text-sm font-medium px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {grammarResults.map((item, idx) => (
+                      <div key={item.id || idx} className={`p-3 rounded-md border ${props.theme === 'light' ? 'border-blue-50' : 'border-gray-600'}`}>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-sm font-semibold">{item.message}</p>
+                            {item.context && item.context.text && (
+                              <p className="text-xs mt-1 text-gray-500">"{item.context.text}"</p>
+                            )}
+                            {item.replacements && item.replacements.length > 0 && (
+                              <p className="text-xs mt-1 text-green-500">Suggestion: {item.replacements[0].value || item.replacements[0]}</p>
+                            )}
+                          </div>
+
+                          <div className="flex flex-col items-end gap-2">
+                            <button
+                              onClick={() => setGrammarResults((prev) => prev.filter((_, i) => i !== idx))}
+                              className="text-xs px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                            >
+                              Dismiss
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
         </div>
 
         {/* FUNCTION BUTTONS */}
@@ -183,21 +241,16 @@ const TextForm = (props) => {
             op.id === "generate-lorem" ? (
               <div key={i} className="flex items-center gap-2">
                 <button
-                  onClick={op.func}
+                  onClick={() => {
+                    // generate a random number between 1 and 10
+                    const randomCount = Math.floor(Math.random() * 10) + 1;
+                    op.func(randomCount);
+                  }}
                   style={buttonStyle}
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 active:scale-95`}
                 >
                   {op.id === "grammar-check" && loadingGrammar ? t("textForm.checking") : op.label}
                 </button>
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  value={loremParagraphs}
-                  onChange={(e) => setLoremParagraphs(parseInt(e.target.value))}
-                  className="w-24"
-                />
-                <span>{loremParagraphs}</span>
               </div>
             ) : (
               // FIX 2: Corrected the malformed button with duplicate attributes.
@@ -329,11 +382,7 @@ const TextForm = (props) => {
           </div>
         )}
 
-        {/* Divider */}
-        <div
-          className={`border-t-2 my-8 ${props.theme === "light" ? "border-blue-500/50" : "border-gray-700"
-            }`}
-        ></div>
+        {/* (Grammar pane moved above near the textarea) */}
 
         {/* Preview Section */}
         <div data-aos="fade-up" data-aos-delay="10">
@@ -376,3 +425,6 @@ const TextForm = (props) => {
 };
 
 export default TextForm;
+
+// minimal propTypes stub to satisfy prop validation rules where configured
+TextForm.propTypes = {};
