@@ -8,10 +8,15 @@ WordWizard is an open-source word and character counter built with React + Vite 
 
 ## Contribution Guidelines
 
-- Keep PRs small and focused.
-- Use clear and descriptive commit messages.
-- Respect other contributors and maintain a positive, collaborative attitude.
-- Avoid submitting spammy or irrelevant PRs.
+- **Check Issues First:** Before contributing, make sure an issue already exists for the task.  
+- **Create an Issue if Needed:** If no related issue exists, create one first before making any changes.  
+- **Get Assigned:** Wait to be assigned to the issue before starting work. Unassigned PRs will be **closed**.  
+- **Follow Templates:** All issues and PRs **must use** the provided templates in the `CONTRIBUTING.md` file.  
+- **No Random PRs:** Avoid submitting PRs that don’t relate to an open, assigned issue.  
+- **Commit Messages:** Use clear and descriptive commit messages.  
+- **Collaboration:** Be respectful, helpful, and maintain a positive attitude.  
+- **Avoid Spam:** Spammy or irrelevant PRs and issues will be marked invalid and may lead to a ban.  
+- **Review Before PR:** Double-check your code and ensure it follows project structure and linting rules before opening a PR.
 
 ---
 
