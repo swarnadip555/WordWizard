@@ -38,34 +38,34 @@
 
 > **WordWizard** is a modern, feature-rich text manipulation tool that empowers users to efficiently analyze and transform text content. Built with performance and user experience in mind, it provides a comprehensive suite of text processing features with an intuitive interface.
 
-| Why WordWizard?                | Description                                                |
-| ------------------------------ | ---------------------------------------------------------- |
-| 🚀 **Lightning Fast** | Built with React + Vite for optimal performance.           |
-| 🎨 **Customizable** | Multiple themes and appearance options.                    |
-| 📱 **Responsive** | Works seamlessly across all devices.                       |
-| 🔐 **Privacy-Focused** | All text processing happens locally in your browser.       |
+| Why WordWizard?        | Description                                          |
+| ---------------------- | ---------------------------------------------------- |
+| 🚀 **Lightning Fast**  | Built with React + Vite for optimal performance.     |
+| 🎨 **Customizable**    | Multiple themes and appearance options.              |
+| 📱 **Responsive**      | Works seamlessly across all devices.                 |
+| 🔐 **Privacy-Focused** | All text processing happens locally in your browser. |
 
 ---
 
 ## ⭐ Key Features
 
-| Category                 | Feature                                              |
-| ------------------------ | ---------------------------------------------------- |
-| **✍️ Text Manipulation** | • Case conversion (UPPERCASE, lowercase)  • Smart space management  • Real-time text analysis  • One-click copy to clipboard |
-| **📊 Analysis Tools** | • Detailed word & character counts  • Character frequency analysis  • Reading time estimation  • Text complexity metrics |
-| **🎨 User Experience** | • Dark/Light mode with multiple themes  • Instant results with no page reloads  • Auto-save functionality  • Smooth transitions |
+| Category                 | Feature                                                                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| **✍️ Text Manipulation** | • Case conversion (UPPERCASE, lowercase) • Smart space management • Real-time text analysis • One-click copy to clipboard    |
+| **📊 Analysis Tools**    | • Detailed word & character counts • Character frequency analysis • Reading time estimation • Text complexity metrics        |
+| **🎨 User Experience**   | • Dark/Light mode with multiple themes • Instant results with no page reloads • Auto-save functionality • Smooth transitions |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category             | Technologies                               |
-| -------------------- | ------------------------------------------ |
-| **Core** | `React 18`, `Vite`, `Tailwind CSS`         |
-| **UI Components** | `Bootstrap 5`, `CSS Modules`               |
-| **State Management** | `React Context API`                        |
-| **Dev Tools** | `ESLint`, `Prettier`, `Husky`, `lint-staged` |
-| **Testing** | `Jest`, `React Testing Library`            |
+| Category             | Technologies                                 |
+| -------------------- | -------------------------------------------- |
+| **Core**             | `React 18`, `Vite`, `Tailwind CSS`           |
+| **UI Components**    | `Bootstrap 5`, `CSS Modules`                 |
+| **State Management** | `React Context API`                          |
+| **Dev Tools**        | `ESLint`, `Prettier`, `Husky`, `lint-staged` |
+| **Testing**          | `Jest`, `React Testing Library`              |
 
 ---
 
@@ -80,18 +80,25 @@
 
 1. **Clone the repository:**
 
-    ```bash
-    git clone https://github.com/palchhinparihar/WordWizard.git
-    cd WordWizard
+   ```bash
+   git clone https://github.com/palchhinparihar/WordWizard.git
+   cd WordWizard
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Add .env file:**
+
     ```
-
-1. **Install dependencies:**
-
-    ```bash
-    npm install
+    VITE_LANUGAGETOOL_API_URL=https://api.languagetool.org/v2/check
     ```
+  > Anyone can call it, but rate-limited to 20 requests per minute per IP (approx).
 
-1. **Start the development server:**
+3. **Start the development server:**
 
     ```bash
     npm run dev
@@ -136,7 +143,7 @@ wordwizard/
 ├── index.html          # HTML entry point
 ├── package.json        # Dependencies and scripts
 └── vite.config.js      # Vite configuration
-```
+````
 
 ---
 

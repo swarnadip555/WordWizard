@@ -1,16 +1,15 @@
 {
-    "appTitle": "WordWizard",
-    "welcome": "Welcome to WordWizard!",
-    "analyzeText": "Analyze Text",
-    "caseConversion": "Case Conversion",
-    "removeSpaces": "Remove Extra Spaces",
-    "theme": "Theme",
-    "darkMode": "Dark Mode",
-    "lightMode": "Light Mode",
-    "home": "Home",
-    "about": "About",
-
-    "footer": {
+  "appTitle": "WordWizard",
+  "welcome": "Welcome to WordWizard!",
+  "analyzeText": "Analyze Text",
+  "caseConversion": "Case Conversion",
+  "removeSpaces": "Remove Extra Spaces",
+  "theme": "Theme",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "home": "Home",
+  "about": "About",
+  "footer": {
     "title": "WordWizard ✨",
     "description": "A powerful text manipulation tool built with React. Transform, analyze, and enhance your text with ease. Multiple themes, real-time stats, and more.",
     "quickLinks": "Quick Links",
@@ -21,9 +20,8 @@
     "madeWith": "Made with",
     "by": "by",
     "copyright": "WordWizard. All rights reserved."
-    },
-
-    "textForm": {
+  },
+  "textForm": {
     "title": "Enter your text below",
     "placeholder": "Start typing or paste your text here...",
     "summary": "Your Text Summary",
@@ -34,10 +32,9 @@
     "preview": "Preview",
     "noPreview": "Nothing to preview yet!",
     "checking": "Checking..."
-    },
-
-    "alerts": {
+  },
+  "alerts": {
     "fileImported": "File imported successfully!",
     "fileError": "Error reading file!"
-    }
+  }
 }

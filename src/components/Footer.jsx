@@ -19,7 +19,7 @@ const Footer = ({ theme }) => {
           : "bg-gradient-to-r from-white via-gray-50 to-white text-gray-700 border-t border-gray-200"
       }`}
     >
-      <div className="container mx-auto max-w-5xl px-4">
+      <div data-aos="fade-up" className="container mx-auto max-w-5xl px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* About Section */}
           <div>
@@ -66,7 +66,7 @@ const Footer = ({ theme }) => {
               <li>
                 <button
                   onClick={scrollToTop}
-                  className={`transition-colors hover:underline flex items-center gap-1 ${
+                  className={`transition-colors hover:underline flex items-center gap-1 cursor-pointer ${
                     isDark ? "hover:text-blue-400" : "hover:text-blue-600"
                   }`}
                 >

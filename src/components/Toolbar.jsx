@@ -152,7 +152,7 @@ const Toolbar = ({
                 ${
                   isDisabled(label)
                     ? "opacity-50 cursor-not-allowed"
-                    : "hover:scale-105"
+                    : "hover:scale-105 cursor-pointer"
                 }
                 ${isActive ? "ring-2 ring-yellow-400 shadow" : ""}`}
                 style={{
@@ -165,9 +165,7 @@ const Toolbar = ({
               {getIcon(label)}
             </button>
 
-            
             {/* No inline controls for lorem paragraphs here (random generation handled in TextForm) */}
-            
           </React.Fragment>
         );
       })}
@@ -179,5 +177,3 @@ export default Toolbar;
  
 // Provide an empty propTypes object to satisfy prop validation lint rule where configured
 Toolbar.propTypes = {};
- 
-

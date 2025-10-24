@@ -50,3 +50,9 @@ export const generateLoremIpsum = async (paragraphs) => {
     throw err;
   }
 };
+
+export const wordCount = (text) => {
+  return text
+  .split(/\s+/)
+  .filter((el) => el.length !== 0).length;
+};
